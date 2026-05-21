@@ -12,7 +12,7 @@ import {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.ShadowDom,
-  template: `<slot></slot>`,
+  templateUrl: './totals.component.html',
   styleUrl: './totals.component.scss',
 })
 export class TotalsComponent {}

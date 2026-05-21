@@ -16,17 +16,7 @@ import { CardComponent } from '../card/card.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.ShadowDom,
   imports: [CardComponent],
-  template: `
-    <section>
-      <div class="month-head">
-        <h3>{{ monthLabel }}</h3>
-        <span class="total">{{ total }}</span>
-      </div>
-      <tab-card padding="sm">
-        <slot></slot>
-      </tab-card>
-    </section>
-  `,
+  templateUrl: './month-section.component.html',
   styleUrl: './month-section.component.scss',
 })
 export class MonthSectionComponent {

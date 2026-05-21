@@ -14,14 +14,7 @@ import {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.ShadowDom,
-  template: `
-    <div class="ledger-head">
-      <span>{{ itemHead }}</span>
-      <span class="num">{{ totalHead }}</span>
-      <span class="num">{{ shareHead }}</span>
-    </div>
-    <slot></slot>
-  `,
+  templateUrl: './ledger.component.html',
   styleUrl: './ledger.component.scss',
 })
 export class LedgerComponent {

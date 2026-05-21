@@ -15,7 +15,7 @@
   font-size: 14px;
 }
 
-.ledger-row .num {
+.ledger-row__num {
   text-align: right;
   font-variant-numeric: tabular-nums;
   font-family: var(--font-num);
@@ -23,16 +23,16 @@
   color: var(--c-text-strong);
 }
 
-.ledger-row .num.muted {
+.ledger-row__num--muted {
   color: var(--c-muted);
   font-weight: 400;
 }
 
-.ledger-row .desc {
+.ledger-row__desc {
   color: var(--c-text);
 }
 
-.ledger-row .desc .when {
+.ledger-row__when {
   color: var(--c-muted);
   font-size: 12px;
   display: block;

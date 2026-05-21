@@ -1,0 +1,13 @@
+<div class="totals-row" [class.totals-row--final]="final">
+  <span
+    class="totals-row__label"
+    [class.totals-row__label--strong]="labelStrong"
+    [class.totals-row__label--muted]="!labelStrong">
+    {{ label }}
+  </span>
+  <tab-amount
+    [value]="value"
+    [size]="amountSize"
+    [muted]="muted"
+    [sign]="sign"></tab-amount>
+</div>

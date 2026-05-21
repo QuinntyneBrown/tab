@@ -11,7 +11,7 @@ namespace Tab.Api.AcceptanceTests.Infrastructure;
 public class TabApiFactory : WebApplicationFactory<Program>
 {
     private readonly SqliteConnection _connection;
-    public FakeTimeProvider Time { get; } = new(new DateTimeOffset(2026, 5, 21, 12, 0, 0, TimeSpan.Zero));
+    public FakeTimeProvider Time { get; } = new(DateTimeOffset.UtcNow);
 
     public TabApiFactory()
     {

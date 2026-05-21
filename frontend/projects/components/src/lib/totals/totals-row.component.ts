@@ -16,18 +16,7 @@ import { AmountComponent } from '../amount/amount.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.ShadowDom,
   imports: [AmountComponent],
-  template: `
-    <div class="row" [class.final]="final">
-      <span [class.strong]="labelStrong" [class.muted]="!labelStrong">
-        {{ label }}
-      </span>
-      <tab-amount
-        [value]="value"
-        [size]="amountSize"
-        [muted]="muted"
-        [sign]="sign"></tab-amount>
-    </div>
-  `,
+  templateUrl: './totals-row.component.html',
   styleUrl: './totals-row.component.scss',
 })
 export class TotalsRowComponent {

@@ -16,21 +16,7 @@ import {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.ShadowDom,
-  template: `
-    <div class="ledger-row">
-      <div class="desc">
-        {{ desc }}<span class="when">{{ when }}</span>
-      </div>
-      <div class="num" [class.muted]="total === null">
-        {{ total === null ? '—' : formatted(total) }}
-      </div>
-      <div class="num">
-        @if (shareSign) {
-          <span>{{ shareSign }}</span>
-        }{{ formatted(share) }}
-      </div>
-    </div>
-  `,
+  templateUrl: './ledger-row.component.html',
   styleUrl: './ledger-row.component.scss',
 })
 export class LedgerRowComponent {

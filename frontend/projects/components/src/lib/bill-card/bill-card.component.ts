@@ -28,48 +28,7 @@ export interface TabBillCardBadge {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.ShadowDom,
   imports: [AmountComponent, BadgeComponent, ButtonComponent, CardComponent],
-  template: `
-    <tab-card>
-      <div class="bill">
-        <div class="bill-top">
-          <div>
-            <div class="bill-name">{{ name }}</div>
-            <div class="bill-meta">{{ meta }}</div>
-          </div>
-          <tab-badge
-            [variant]="badge.variant ?? 'default'"
-            [dot]="!!badge.dot">{{ badge.text }}</tab-badge>
-        </div>
-
-        <div class="bill-grid">
-          <div class="cell">
-            <div class="k">{{ primaryKey }}</div>
-            <div class="v">
-              <tab-amount
-                [value]="primaryValue"
-                size="md"
-                [muted]="primaryMuted"></tab-amount>
-            </div>
-          </div>
-          <div class="cell">
-            <div class="k">{{ splitKey }}</div>
-            <div class="v">
-              <tab-amount [value]="splitValue" size="md"></tab-amount>
-            </div>
-          </div>
-        </div>
-
-        <div class="bill-actions">
-          <tab-button full size="sm" (click)="primaryClick.emit()">
-            {{ primaryAction }}
-          </tab-button>
-          <tab-button full size="sm" variant="ghost" (click)="secondaryClick.emit()">
-            {{ secondaryAction }}
-          </tab-button>
-        </div>
-      </div>
-    </tab-card>
-  `,
+  templateUrl: './bill-card.component.html',
   styleUrl: './bill-card.component.scss',
 })
 export class BillCardComponent {

@@ -28,13 +28,14 @@ public static class TabServiceCollectionExtensions
     {
         JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                var sp = services.BuildServiceProvider();
-                var jwt = sp.GetRequiredService<IOptions<JwtOptions>>().Value;
-                var keys = sp.GetRequiredService<RsaKeyProvider>();
+        services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer();
 
+        services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
+            .Configure<IOptions<JwtOptions>, RsaKeyProvider>((options, jwtOptions, keys) =>
+            {
+                var jwt = jwtOptions.Value;
                 options.MapInboundClaims = false;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {

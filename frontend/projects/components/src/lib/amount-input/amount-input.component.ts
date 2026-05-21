@@ -22,24 +22,7 @@ import { ButtonComponent } from '../button/button.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.ShadowDom,
   imports: [ButtonComponent],
-  template: `
-    <div class="amount-stage">
-      <div class="label">{{ label }}</div>
-      <input
-        class="amount-input"
-        [attr.inputmode]="inputmode"
-        [placeholder]="placeholder"
-        [value]="value"
-        (input)="onInput($event)" />
-      <div class="chips">
-        @for (c of chips; track c) {
-          <tab-button variant="ghost" size="sm" (click)="applyChip(c)">
-            {{ currency }}{{ c }}
-          </tab-button>
-        }
-      </div>
-    </div>
-  `,
+  templateUrl: './amount-input.component.html',
   styleUrl: './amount-input.component.scss',
   providers: [
     {

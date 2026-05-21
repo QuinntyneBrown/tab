@@ -1,0 +1,40 @@
+<tab-card>
+  <div class="bill-card">
+    <div class="bill-card__top">
+      <div>
+        <div class="bill-card__name">{{ name }}</div>
+        <div class="bill-card__meta">{{ meta }}</div>
+      </div>
+      <tab-badge
+        [variant]="badge.variant ?? 'default'"
+        [dot]="!!badge.dot">{{ badge.text }}</tab-badge>
+    </div>
+
+    <div class="bill-card__grid">
+      <div class="bill-card__cell">
+        <div class="bill-card__key">{{ primaryKey }}</div>
+        <div class="bill-card__value">
+          <tab-amount
+            [value]="primaryValue"
+            size="md"
+            [muted]="primaryMuted"></tab-amount>
+        </div>
+      </div>
+      <div class="bill-card__cell">
+        <div class="bill-card__key">{{ splitKey }}</div>
+        <div class="bill-card__value">
+          <tab-amount [value]="splitValue" size="md"></tab-amount>
+        </div>
+      </div>
+    </div>
+
+    <div class="bill-card__actions">
+      <tab-button full size="sm" (click)="primaryClick.emit()">
+        {{ primaryAction }}
+      </tab-button>
+      <tab-button full size="sm" variant="ghost" (click)="secondaryClick.emit()">
+        {{ secondaryAction }}
+      </tab-button>
+    </div>
+  </div>
+</tab-card>

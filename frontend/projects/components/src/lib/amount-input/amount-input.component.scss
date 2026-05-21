@@ -5,12 +5,12 @@
   display: block;
 }
 
-.amount-stage {
+.amount-input {
   text-align: center;
   padding: var(--s-7) 0 var(--s-5);
 }
 
-.label {
+.amount-input__label {
   color: var(--c-muted);
   font-size: 12px;
   text-transform: uppercase;
@@ -19,7 +19,7 @@
   margin-bottom: var(--s-3);
 }
 
-.amount-input {
+.amount-input__control {
   width: 100%;
   background: transparent;
   border: 0;
@@ -33,14 +33,16 @@
   text-align: center;
   caret-color: var(--c-text);
 }
-.amount-input::placeholder { color: var(--c-text-faint); }
-.amount-input:focus-visible {
+.amount-input__control::placeholder {
+  color: var(--c-text-faint);
+}
+.amount-input__control:focus-visible {
   outline: 2px solid var(--c-focus);
   outline-offset: 4px;
   border-radius: var(--r-sm);
 }
 
-.chips {
+.amount-input__chips {
   display: flex;
   gap: var(--s-2);
   flex-wrap: wrap;

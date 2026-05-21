@@ -5,7 +5,7 @@
   display: block;
 }
 
-.month-head {
+.month-section__head {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
@@ -13,7 +13,7 @@
   padding: 0 var(--s-1);
 }
 
-h3 {
+.month-section__title {
   font-size: 12px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -22,7 +22,7 @@ h3 {
   margin: 0;
 }
 
-.total {
+.month-section__total {
   color: var(--c-text);
   font-size: 13px;
   font-variant-numeric: tabular-nums;

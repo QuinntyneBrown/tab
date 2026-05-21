@@ -103,6 +103,22 @@ main.main--no-nav { padding-bottom: var(--s-8); }
   body:has(.app:not(:has(tab-nav))) {
     background: radial-gradient(circle at 50% 0%, #38383b 0%, #1d1d1f 70%);
   }
+
+  /* Statement — shareable & printable. Widen on desktop and frame as a card. */
+  .app.app--statement {
+    max-width: 880px;
+    margin: var(--s-7) auto;
+    border-radius: var(--r-xl);
+    border: 1px solid var(--c-hairline-strong);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+  }
+}
+
+@media print {
+  .app.app--statement {
+    box-shadow: none;
+    border: none;
+  }
 }
 
 /* ============================================================

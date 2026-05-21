@@ -1,0 +1,13 @@
+<div class="ledger-row">
+  <div class="ledger-row__desc">
+    {{ desc }}<span class="ledger-row__when">{{ when }}</span>
+  </div>
+  <div class="ledger-row__num" [class.ledger-row__num--muted]="total === null">
+    {{ total === null ? '—' : formatted(total) }}
+  </div>
+  <div class="ledger-row__num">
+    @if (shareSign) {
+      <span>{{ shareSign }}</span>
+    }{{ formatted(share) }}
+  </div>
+</div>

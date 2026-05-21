@@ -19,14 +19,14 @@ tab-card::part(card) {
   flex-direction: column;
 }
 
-.bill {
+.bill-card {
   display: flex;
   flex-direction: column;
   height: 100%;
   flex: 1;
 }
 
-.bill-top {
+.bill-card__top {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -34,19 +34,19 @@ tab-card::part(card) {
   margin-bottom: var(--s-4);
 }
 
-.bill-name {
+.bill-card__name {
   font-size: clamp(16px, 0.4vw + 15px, 18px);
   font-weight: 600;
   color: var(--c-text-strong);
 }
 
-.bill-meta {
+.bill-card__meta {
   color: var(--c-muted);
   font-size: 13px;
   margin-top: 2px;
 }
 
-.bill-grid {
+.bill-card__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--s-3);
@@ -54,7 +54,7 @@ tab-card::part(card) {
   padding-top: var(--s-4);
 }
 
-.cell .k {
+.bill-card__key {
   color: var(--c-muted);
   font-size: 12px;
   text-transform: uppercase;
@@ -62,11 +62,11 @@ tab-card::part(card) {
   font-weight: 600;
 }
 
-.cell .v {
+.bill-card__value {
   margin-top: 4px;
 }
 
-.bill-actions {
+.bill-card__actions {
   display: flex;
   gap: var(--s-2);
   margin-top: auto;

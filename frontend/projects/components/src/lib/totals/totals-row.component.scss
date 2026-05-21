@@ -5,18 +5,24 @@
   display: block;
 }
 
-.row {
+.totals-row {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
   padding: var(--s-2) var(--s-2);
 }
 
-.row.final {
+.totals-row--final {
   margin-top: var(--s-3);
   padding-top: var(--s-4);
   border-top: 1px solid var(--c-hairline-strong);
 }
 
-.muted  { color: var(--c-muted); }
-.strong { color: var(--c-text-strong); font-weight: 600; }
+.totals-row__label--muted {
+  color: var(--c-muted);
+}
+
+.totals-row__label--strong {
+  color: var(--c-text-strong);
+  font-weight: 600;
+}
