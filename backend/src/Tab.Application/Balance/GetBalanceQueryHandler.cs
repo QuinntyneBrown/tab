@@ -20,13 +20,13 @@ public class GetBalanceQueryHandler : IRequestHandler<GetBalanceQuery, BalanceRe
 
     public async Task<BalanceResponse> Handle(GetBalanceQuery request, CancellationToken cancellationToken)
     {
-        var loans = await _db.Loans.AsNoTracking().Where(l => l.UserId == _user.Id).SumAsync(l => (decimal?)l.Amount, cancellationToken) ?? 0m;
-        var bills = await _db.BillPostings.AsNoTracking().Where(b => b.UserId == _user.Id).SumAsync(b => (decimal?)b.ShareAmount, cancellationToken) ?? 0m;
-        var payments = await _db.Payments.AsNoTracking().Where(p => p.UserId == _user.Id).SumAsync(p => (decimal?)p.Amount, cancellationToken) ?? 0m;
+        var loanAmounts = await _db.Loans.AsNoTracking().Where(l => l.UserId == _user.Id).Select(l => l.Amount).ToListAsync(cancellationToken);
+        var billAmounts = await _db.BillPostings.AsNoTracking().Where(b => b.UserId == _user.Id).Select(b => b.ShareAmount).ToListAsync(cancellationToken);
+        var paymentAmounts = await _db.Payments.AsNoTracking().Where(p => p.UserId == _user.Id).Select(p => p.Amount).ToListAsync(cancellationToken);
 
         return new BalanceResponse
         {
-            Amount = loans + bills - payments,
+            Amount = loanAmounts.Sum() + billAmounts.Sum() - paymentAmounts.Sum(),
             AsOf = _timeProvider.GetUtcNow()
         };
     }

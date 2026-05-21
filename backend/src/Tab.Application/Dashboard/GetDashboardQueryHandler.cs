@@ -29,13 +29,17 @@ public class GetDashboardQueryHandler : IRequestHandler<GetDashboardQuery, Dashb
         var monthStart = new DateOnly(today.Year, today.Month, 1);
         var nextMonth = monthStart.AddMonths(1);
 
-        var loansTotal = await _db.Loans.AsNoTracking().Where(l => l.UserId == _user.Id).SumAsync(l => (decimal?)l.Amount, cancellationToken) ?? 0m;
-        var billsTotal = await _db.BillPostings.AsNoTracking().Where(b => b.UserId == _user.Id).SumAsync(b => (decimal?)b.ShareAmount, cancellationToken) ?? 0m;
-        var paymentsTotal = await _db.Payments.AsNoTracking().Where(p => p.UserId == _user.Id).SumAsync(p => (decimal?)p.Amount, cancellationToken) ?? 0m;
+        var loans = await _db.Loans.AsNoTracking().Where(l => l.UserId == _user.Id).Select(l => new { l.Amount, l.Date }).ToListAsync(cancellationToken);
+        var billPostings = await _db.BillPostings.AsNoTracking().Where(b => b.UserId == _user.Id).Select(b => new { b.ShareAmount, b.Date }).ToListAsync(cancellationToken);
+        var payments = await _db.Payments.AsNoTracking().Where(p => p.UserId == _user.Id).Select(p => new { p.Amount, p.Date }).ToListAsync(cancellationToken);
 
-        var lent = await _db.Loans.AsNoTracking().Where(l => l.UserId == _user.Id && l.Date >= monthStart && l.Date < nextMonth).SumAsync(l => (decimal?)l.Amount, cancellationToken) ?? 0m;
-        var billShare = await _db.BillPostings.AsNoTracking().Where(b => b.UserId == _user.Id && b.Date >= monthStart && b.Date < nextMonth).SumAsync(b => (decimal?)b.ShareAmount, cancellationToken) ?? 0m;
-        var paidBack = await _db.Payments.AsNoTracking().Where(p => p.UserId == _user.Id && p.Date >= monthStart && p.Date < nextMonth).SumAsync(p => (decimal?)p.Amount, cancellationToken) ?? 0m;
+        var loansTotal = loans.Sum(x => x.Amount);
+        var billsTotal = billPostings.Sum(x => x.ShareAmount);
+        var paymentsTotal = payments.Sum(x => x.Amount);
+
+        var lent = loans.Where(l => l.Date >= monthStart && l.Date < nextMonth).Sum(l => l.Amount);
+        var billShare = billPostings.Where(b => b.Date >= monthStart && b.Date < nextMonth).Sum(b => b.ShareAmount);
+        var paidBack = payments.Where(p => p.Date >= monthStart && p.Date < nextMonth).Sum(p => p.Amount);
 
         var recent = await BuildRecentActivity(cancellationToken);
 
