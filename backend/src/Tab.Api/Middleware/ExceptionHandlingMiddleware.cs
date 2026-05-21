@@ -52,8 +52,11 @@ public class ExceptionHandlingMiddleware
         catch (Exception ex)
         {
             _logger.LogError(ex, "Unhandled exception processing {Method} {Path}", context.Request.Method, context.Request.Path);
-            await WriteProblem(context, StatusCodes.Status500InternalServerError, "Internal Server Error",
-                "An unexpected error occurred.");
+            var env = context.RequestServices.GetService<IHostEnvironment>();
+            var detail = env is not null && (env.IsDevelopment() || string.Equals(env.EnvironmentName, "Testing", StringComparison.OrdinalIgnoreCase))
+                ? $"{ex.GetType().Name}: {ex.Message}"
+                : "An unexpected error occurred.";
+            await WriteProblem(context, StatusCodes.Status500InternalServerError, "Internal Server Error", detail);
         }
     }
 
