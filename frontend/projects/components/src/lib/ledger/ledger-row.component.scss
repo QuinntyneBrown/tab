@@ -1,0 +1,40 @@
+@use '../tokens' as tokens;
+
+:host {
+  @include tokens.tab-tokens;
+  display: block;
+}
+
+.ledger-row {
+  display: grid;
+  grid-template-columns: 1fr 90px 100px;
+  gap: var(--s-3);
+  align-items: baseline;
+  padding: var(--s-3) var(--s-2);
+  border-bottom: 1px solid var(--c-hairline);
+  font-size: 14px;
+}
+
+.ledger-row .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-num);
+  font-weight: 500;
+  color: var(--c-text-strong);
+}
+
+.ledger-row .num.muted {
+  color: var(--c-muted);
+  font-weight: 400;
+}
+
+.ledger-row .desc {
+  color: var(--c-text);
+}
+
+.ledger-row .desc .when {
+  color: var(--c-muted);
+  font-size: 12px;
+  display: block;
+  margin-top: 2px;
+}

@@ -1,0 +1,74 @@
+@use '../tokens' as tokens;
+
+:host {
+  @include tokens.tab-tokens;
+  display: block;
+  height: 100%;
+}
+
+tab-card {
+  display: block;
+  height: 100%;
+}
+
+/* Reach into the child shadow boundary via the exported "card" part so the
+   inner surface fills the host (equal-height columns in .bills-grid). */
+tab-card::part(card) {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.bill {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex: 1;
+}
+
+.bill-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-3);
+  margin-bottom: var(--s-4);
+}
+
+.bill-name {
+  font-size: clamp(16px, 0.4vw + 15px, 18px);
+  font-weight: 600;
+  color: var(--c-text-strong);
+}
+
+.bill-meta {
+  color: var(--c-muted);
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.bill-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-3);
+  border-top: 1px solid var(--c-hairline);
+  padding-top: var(--s-4);
+}
+
+.cell .k {
+  color: var(--c-muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+
+.cell .v {
+  margin-top: 4px;
+}
+
+.bill-actions {
+  display: flex;
+  gap: var(--s-2);
+  margin-top: auto;
+  padding-top: var(--s-4);
+}

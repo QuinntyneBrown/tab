@@ -1,0 +1,24 @@
+@if (label) {
+  <label class="input__label" part="label">{{ label }}</label>
+}
+<div class="input__field">
+  @if (prefix) {
+    <span class="input__prefix">{{ prefix }}</span>
+  }
+  <input
+    #input
+    class="input__control"
+    [type]="type"
+    [attr.inputmode]="inputmode"
+    [attr.autocomplete]="autocomplete"
+    [attr.name]="name"
+    [placeholder]="placeholder"
+    [disabled]="disabled"
+    [value]="value"
+    (input)="onInput($event)"
+    (blur)="onBlurInternal($event)"
+    (focus)="focusOut.emit($event)" />
+</div>
+@if (hint) {
+  <div class="input__hint">{{ hint }}</div>
+}

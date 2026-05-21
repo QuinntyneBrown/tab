@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#2E2E30" />
+  <title>tab — statement</title>
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <script src="assets/js/components.js" defer></script>
+  <style>
+    .stmt-wrap { max-width: 760px; margin-inline: auto; }
+    /* Statement is shareable & printable — widen on desktop, undo narrow card framing */
+    @media (min-width: 960px) {
+      .app.statement-app {
+        max-width: 880px !important;
+        margin: var(--s-7) auto !important;
+        border-radius: var(--r-xl);
+        border: 1px solid var(--c-hairline-strong);
+        box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+      }
+    }
+    @media print {
+      .app.statement-app { box-shadow: none; border: none; }
+      tab-header, .actions { display: none !important; }
+    }
+    .stmt-head {
+      text-align: center;
+      padding: var(--s-7) var(--s-5) var(--s-5);
+    }
+    @media (min-width: 720px) {
+      .stmt-head { padding: var(--s-9) var(--s-5) var(--s-7); }
+    }
+    .stmt-head .brand {
+      font-family: var(--font-num);
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: -0.03em;
+      color: var(--c-text-strong);
+    }
+    .stmt-head .brand .dot { color: var(--c-muted); }
+    .stmt-head .who { color: var(--c-muted); margin-top: var(--s-4); font-size: 13px; }
+    .stmt-head h1 { margin-top: var(--s-5); font-size: 22px; }
+
+    .summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s-3);
+      margin-bottom: var(--s-6);
+    }
+    .summary .k { color: var(--c-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 4px; }
+    .summary .cell { padding: var(--s-4); background: var(--c-surface); border: 1px solid var(--c-hairline); border-radius: 12px; }
+
+    .ledger-head {
+      display: grid;
+      grid-template-columns: 1fr 90px 100px;
+      gap: var(--s-3);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--c-muted);
+      padding: 0 var(--s-2) var(--s-2);
+      font-weight: 600;
+      border-bottom: 1px solid var(--c-hairline-strong);
+    }
+    .ledger-head .num { text-align: right; }
+
+    .ledger-row {
+      display: grid;
+      grid-template-columns: 1fr 90px 100px;
+      gap: var(--s-3);
+      align-items: baseline;
+      padding: var(--s-3) var(--s-2);
+      border-bottom: 1px solid var(--c-hairline);
+      font-size: 14px;
+    }
+    .ledger-row .num { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--font-num); font-weight: 500; color: var(--c-text-strong); }
+    .ledger-row .num.muted { color: var(--c-muted); font-weight: 400; }
+    .ledger-row .desc { color: var(--c-text); }
+    .ledger-row .desc .when { color: var(--c-muted); font-size: 12px; display: block; margin-top: 2px; }
+
+    .totals {
+      margin-top: var(--s-6);
+      padding-top: var(--s-4);
+      border-top: 1px solid var(--c-hairline-strong);
+    }
+    .totals .row { padding: var(--s-2) var(--s-2); display:flex; justify-content: space-between; align-items: baseline; }
+    .totals .row.final {
+      margin-top: var(--s-3);
+      padding-top: var(--s-4);
+      border-top: 1px solid var(--c-hairline-strong);
+    }
+
+    .signoff {
+      margin-top: var(--s-8);
+      padding-top: var(--s-5);
+      border-top: 1px solid var(--c-hairline);
+      color: var(--c-muted);
+      font-size: 12px;
+      text-align: center;
+      line-height: 1.6;
+    }
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); margin-top: var(--s-5); }
+  </style>
+</head>
+<body>
+  <div class="app statement-app">
+    <tab-header title="Statement" back href="dashboard.html">
+      <tab-button slot="action" variant="quiet" size="sm">Share</tab-button>
+    </tab-header>
+
+    <main class="no-nav">
+      <div class="stmt-wrap">
+      <div class="stmt-head">
+        <div class="brand">tab<span class="dot">.</span></div>
+        <div class="who">Prepared for <span class="strong">Raymond Brown</span></div>
+        <h1>Balance as of May 21, 2026</h1>
+        <div style="margin-top: var(--s-5)"><tab-amount value="1284.50" size="2xl"></tab-amount></div>
+      </div>
+
+      <div class="summary">
+        <div class="cell">
+          <div class="k">Period</div>
+          <div class="strong">Mar 01 – May 21</div>
+        </div>
+        <div class="cell">
+          <div class="k">Entries</div>
+          <div class="strong tabular">14</div>
+        </div>
+      </div>
+
+      <div class="ledger-head">
+        <span>Item</span>
+        <span class="num">Total</span>
+        <span class="num">Your share</span>
+      </div>
+
+      <div class="ledger-row">
+        <div class="desc">Groceries — Loblaws<span class="when">May 18 · cash loan</span></div>
+        <div class="num muted">—</div>
+        <div class="num">$120.00</div>
+      </div>
+      <div class="ledger-row">
+        <div class="desc">Hydro — April<span class="when">May 02 · shared bill</span></div>
+        <div class="num muted">$156.84</div>
+        <div class="num">$78.42</div>
+      </div>
+      <div class="ledger-row">
+        <div class="desc">Bus fare<span class="when">Apr 27 · cash loan</span></div>
+        <div class="num muted">—</div>
+        <div class="num">$40.00</div>
+      </div>
+      <div class="ledger-row">
+        <div class="desc">Payment received<span class="when">Apr 14 · e-transfer</span></div>
+        <div class="num muted">—</div>
+        <div class="num">−$100.00</div>
+      </div>
+      <div class="ledger-row">
+        <div class="desc">Internet — March<span class="when">Apr 03 · shared bill</span></div>
+        <div class="num muted">$81.00</div>
+        <div class="num">$40.50</div>
+      </div>
+      <div class="ledger-row">
+        <div class="desc">Rent help<span class="when">Mar 28 · cash loan</span></div>
+        <div class="num muted">—</div>
+        <div class="num">$300.00</div>
+      </div>
+      <div class="ledger-row">
+        <div class="desc">Medication<span class="when">Mar 12 · cash loan</span></div>
+        <div class="num muted">—</div>
+        <div class="num">$45.00</div>
+      </div>
+
+      <div class="totals">
+        <div class="row"><span class="muted">Loans</span><tab-amount value="505.00" size="md"></tab-amount></div>
+        <div class="row"><span class="muted">Shared bills (your half)</span><tab-amount value="879.50" size="md"></tab-amount></div>
+        <div class="row"><span class="muted">Payments applied</span><tab-amount value="100.00" muted size="md" sign="−"></tab-amount></div>
+        <div class="row final"><span class="strong">Balance owing</span><tab-amount value="1284.50" size="xl"></tab-amount></div>
+      </div>
+
+      <div class="actions">
+        <tab-button full>Send to Ray</tab-button>
+        <tab-button full variant="ghost">Save as PDF</tab-button>
+      </div>
+
+      <div class="signoff">
+        This statement is for record-keeping between two people. <br />
+        Generated by tab on May 21, 2026.
+      </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

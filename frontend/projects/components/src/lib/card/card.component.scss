@@ -1,0 +1,30 @@
+@use '../tokens' as tokens;
+
+:host {
+  @include tokens.tab-tokens;
+  display: block;
+}
+
+.card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-hairline);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+:host([padding='sm']) .card {
+  padding: 14px;
+}
+:host([padding='lg']) .card {
+  padding: 28px;
+}
+
+:host([flat]) .card {
+  background: transparent;
+  border-color: var(--c-hairline-strong);
+}
+
+:host([hero]) .card {
+  background: linear-gradient(180deg, #3A3A3D 0%, #313133 100%);
+  border-color: var(--c-hairline-strong);
+}

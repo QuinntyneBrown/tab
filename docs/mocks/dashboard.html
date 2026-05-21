@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#2E2E30" />
+  <title>tab — overview</title>
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <script src="assets/js/components.js" defer></script>
+  <style>
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--s-5) var(--content-pad) var(--s-3);
+    }
+    .brand-word { font-family: var(--font-num); font-weight: 700; font-size: clamp(18px, 1vw + 14px, 22px); letter-spacing: -0.03em; color: var(--c-text-strong); }
+    .brand-word .accent { color: var(--c-muted); }
+    .greet { display: none; }
+
+    @media (min-width: 960px) {
+      .topbar { display: none; }
+      .greet {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: var(--s-4);
+        margin-bottom: var(--s-6);
+      }
+      .greet h1 { font-size: clamp(24px, 1.4vw + 16px, 32px); }
+      .greet .date { color: var(--c-muted); font-size: 13px; }
+    }
+
+    .hero-card { padding: clamp(28px, 4vw, 48px) var(--s-6) var(--s-6); text-align: center; }
+    .hero-eyebrow { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.14em; color: var(--c-muted); margin-bottom: var(--s-3); font-weight: 600; }
+    .hero-meta { margin-top: var(--s-4); color: var(--c-muted); font-size: 13px; }
+    .quick { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); margin-top: var(--s-5); }
+    @media (min-width: 720px) { .quick { max-width: 420px; margin-inline: auto; margin-top: var(--s-6); } }
+
+    .section-head {
+      display: flex; align-items: baseline; justify-content: space-between;
+      margin: var(--s-7) 0 var(--s-3);
+    }
+    .section-head h3 { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-muted); font-weight: 600; }
+    .section-head a { color: var(--c-text); font-size: 13px; }
+
+    .nudge {
+      margin-top: var(--s-5);
+      padding: var(--s-4) var(--s-5);
+      background: var(--c-surface);
+      border: 1px dashed var(--c-hairline-strong);
+      border-radius: 14px;
+      font-size: 14px;
+      color: var(--c-text);
+      line-height: 1.5;
+    }
+    .nudge .label { color: var(--c-text-strong); font-weight: 600; }
+
+    /* On desktop, recent activity sits next to the monthly summary */
+    @media (min-width: 880px) {
+      .activity-block { margin-top: 0; }
+      .summary-block .section-head { margin-top: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <span class="brand-word">tab<span class="accent">.</span></span>
+      <tab-avatar name="Quinntyne Brown" size="sm"></tab-avatar>
+    </div>
+
+    <main>
+      <div class="greet">
+        <h1>Good morning, Quinn</h1>
+        <span class="date">Thursday, May 21</span>
+      </div>
+
+      <tab-card hero padding="lg">
+        <div class="hero-card">
+          <div class="hero-eyebrow">Uncle Ray owes</div>
+          <tab-amount value="1284.50" size="hero"></tab-amount>
+          <div class="hero-meta">Last activity · 3 days ago</div>
+        </div>
+        <div class="quick">
+          <a href="add.html?mode=loan"  style="display:contents">
+            <tab-button full variant="ghost">Add a loan</tab-button>
+          </a>
+          <a href="add.html?mode=bill"  style="display:contents">
+            <tab-button full variant="ghost">Log a bill</tab-button>
+          </a>
+        </div>
+      </tab-card>
+
+      <div class="nudge">
+        <span class="label">Heads up.</span>
+        Hydro is due in 4 days. Your share will be roughly
+        <span class="strong tabular">$84.00</span> — Ray's half will post automatically once you mark it paid.
+      </div>
+
+      <div class="two-col" style="margin-top: var(--s-7);">
+        <div class="activity-block">
+          <div class="section-head" style="margin-top: 0;">
+            <h3>Recent activity</h3>
+            <a href="loans.html">See all</a>
+          </div>
+          <tab-card padding="sm">
+            <tab-row interactive>
+              <tab-avatar slot="leading" name="G"></tab-avatar>
+              <span slot="title">Cash — groceries</span>
+              <span slot="meta">May 18 · loan</span>
+              <tab-amount slot="trailing" value="120.00" size="md"></tab-amount>
+            </tab-row>
+            <tab-row interactive>
+              <tab-avatar slot="leading" name="H"></tab-avatar>
+              <span slot="title">Hydro — April</span>
+              <span slot="meta">May 02 · shared bill · half</span>
+              <tab-amount slot="trailing" value="78.42" size="md"></tab-amount>
+            </tab-row>
+            <tab-row interactive>
+              <tab-avatar slot="leading" name="B"></tab-avatar>
+              <span slot="title">Cash — bus fare</span>
+              <span slot="meta">Apr 27 · loan</span>
+              <tab-amount slot="trailing" value="40.00" size="md"></tab-amount>
+            </tab-row>
+            <tab-row interactive last>
+              <tab-avatar slot="leading" name="P"></tab-avatar>
+              <span slot="title">Payment received</span>
+              <span slot="meta">Apr 14 · e-transfer</span>
+              <tab-amount slot="trailing" value="100.00" size="md" muted sign="−"></tab-amount>
+            </tab-row>
+          </tab-card>
+        </div>
+
+        <div class="summary-block">
+          <div class="section-head" style="margin-top: 0;">
+            <h3>This month at a glance</h3>
+          </div>
+          <tab-card flat>
+            <div class="row row-between">
+              <span class="muted">Lent</span>
+              <tab-amount value="240.00" size="md"></tab-amount>
+            </div>
+            <tab-divider></tab-divider>
+            <div class="row row-between">
+              <span class="muted">Bills (their half)</span>
+              <tab-amount value="162.50" size="md"></tab-amount>
+            </div>
+            <tab-divider></tab-divider>
+            <div class="row row-between">
+              <span class="muted">Paid back</span>
+              <tab-amount value="100.00" size="md" muted></tab-amount>
+            </div>
+            <tab-divider strong></tab-divider>
+            <div class="row row-between">
+              <span class="strong">Net change</span>
+              <tab-amount value="302.50" size="md"></tab-amount>
+            </div>
+          </tab-card>
+        </div>
+      </div>
+    </main>
+
+    <tab-nav active="dashboard"></tab-nav>
+  </div>
+</body>
+</html>

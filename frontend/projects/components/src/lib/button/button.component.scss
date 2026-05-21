@@ -1,0 +1,84 @@
+@use '../tokens' as tokens;
+
+:host {
+  @include tokens.tab-tokens;
+  display: inline-block;
+}
+:host([full]) {
+  display: block;
+}
+
+.button {
+  font: inherit;
+  font-family: var(--font-sans);
+  font-weight: 550;
+  letter-spacing: -0.005em;
+  color: var(--c-bg);
+  background: var(--c-text-strong);
+  border: 1px solid transparent;
+  padding: 14px 22px;
+  border-radius: 12px;
+  cursor: pointer;
+  width: 100%;
+  min-height: 48px;
+  font-size: 15px;
+  transition:
+    transform var(--ease) 160ms,
+    background var(--ease) 160ms,
+    color var(--ease) 160ms,
+    border-color var(--ease) 160ms;
+}
+
+.button:hover {
+  background: #F2F2F4;
+}
+.button:active {
+  transform: scale(0.985);
+}
+.button:focus-visible {
+  outline: 2px solid var(--c-focus);
+  outline-offset: 2px;
+}
+
+.button--ghost {
+  background: transparent;
+  color: var(--c-text-strong);
+  border-color: var(--c-hairline-strong);
+}
+.button--ghost:hover {
+  background: var(--c-elevated);
+}
+
+.button--quiet {
+  background: transparent;
+  color: var(--c-text);
+  border-color: transparent;
+  padding: 10px 14px;
+  min-height: 0;
+}
+.button--quiet:hover {
+  color: var(--c-text-strong);
+  background: var(--c-elevated);
+}
+
+.button--small {
+  padding: 8px 14px;
+  min-height: 0;
+  font-size: 13px;
+  border-radius: 8px;
+}
+
+/* `--ghost` and `--quiet` can combine with `--small` — the small modifier wins
+   for sizing while the variant retains its color treatment. */
+.button--ghost.button--small,
+.button--quiet.button--small {
+  padding: 8px 14px;
+  min-height: 0;
+  font-size: 13px;
+  border-radius: 8px;
+}
+
+:host([disabled]) .button {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

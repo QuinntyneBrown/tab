@@ -1,0 +1,64 @@
+@use '../tokens' as tokens;
+
+:host {
+  @include tokens.tab-tokens;
+  display: block;
+}
+
+.input__label {
+  display: block;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--c-muted);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.input__field {
+  display: flex;
+  align-items: center;
+  background: var(--c-elevated);
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 14px 16px;
+  transition: border-color var(--ease) 160ms, background var(--ease) 160ms;
+}
+.input__field:focus-within {
+  border-color: var(--c-focus);
+  background: var(--c-surface);
+}
+
+.input__prefix {
+  color: var(--c-muted);
+  font-family: var(--font-num);
+  font-weight: 500;
+  margin-right: 8px;
+}
+
+.input__control {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--c-text-strong);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  min-width: 0;
+}
+.input__control::placeholder {
+  color: var(--c-text-faint);
+}
+
+:host([type='number']) .input__control,
+:host([money]) .input__control {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.input__hint {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--c-muted);
+}

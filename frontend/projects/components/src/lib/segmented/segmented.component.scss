@@ -1,0 +1,38 @@
+@use '../tokens' as tokens;
+
+:host {
+  @include tokens.tab-tokens;
+  display: block;
+}
+
+.segmented__list {
+  display: grid;
+  background: var(--c-elevated);
+  border-radius: var(--r-pill);
+  padding: 4px;
+  gap: 2px;
+}
+
+.segmented__option {
+  font: inherit;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+  background: transparent;
+  border: 0;
+  color: var(--c-muted);
+  padding: 10px 14px;
+  border-radius: var(--r-pill);
+  cursor: pointer;
+  transition: background var(--ease) 180ms, color var(--ease) 180ms;
+}
+
+.segmented__option--selected {
+  background: var(--c-text-strong);
+  color: var(--c-bg);
+}
+
+.segmented__option:focus-visible {
+  outline: 2px solid var(--c-focus);
+  outline-offset: 2px;
+}

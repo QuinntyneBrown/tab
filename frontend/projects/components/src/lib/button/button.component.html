@@ -1,0 +1,11 @@
+<button
+  class="button"
+  [class.button--ghost]="variant === 'ghost'"
+  [class.button--quiet]="variant === 'quiet'"
+  [class.button--small]="size === 'sm'"
+  part="button"
+  [type]="type"
+  [disabled]="disabled"
+  (click)="emitClick($event)">
+  <slot></slot>
+</button>

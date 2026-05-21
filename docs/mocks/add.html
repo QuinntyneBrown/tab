@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#2E2E30" />
+  <title>tab — add entry</title>
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <script src="assets/js/components.js" defer></script>
+  <style>
+    .seg {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      background: var(--c-elevated);
+      border-radius: var(--r-pill);
+      padding: 4px;
+      gap: 2px;
+      margin-bottom: var(--s-6);
+    }
+    .add-wrap { max-width: 480px; margin-inline: auto; }
+    .seg button {
+      font: inherit;
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 13px;
+      background: transparent;
+      border: 0;
+      color: var(--c-muted);
+      padding: 10px 14px;
+      border-radius: var(--r-pill);
+      cursor: pointer;
+      transition: background var(--ease) 180ms, color var(--ease) 180ms;
+    }
+    .seg button[aria-selected="true"] {
+      background: var(--c-text-strong);
+      color: var(--c-bg);
+    }
+    .amount-stage {
+      text-align: center;
+      padding: var(--s-7) 0 var(--s-5);
+    }
+    .amount-stage .label { color: var(--c-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.14em; font-weight: 600; margin-bottom: var(--s-3); }
+    .amount-input {
+      width: 100%;
+      background: transparent;
+      border: 0;
+      outline: 0;
+      color: var(--c-text-strong);
+      font-family: var(--font-num);
+      font-variant-numeric: tabular-nums;
+      font-weight: 500;
+      font-size: 64px;
+      letter-spacing: -0.03em;
+      text-align: center;
+      caret-color: var(--c-text);
+    }
+    .amount-input::placeholder { color: var(--c-text-faint); }
+    .chips {
+      display: flex; gap: var(--s-2); flex-wrap: wrap; justify-content: center;
+      margin-top: var(--s-3);
+    }
+    .submit {
+      position: sticky;
+      bottom: var(--s-4);
+      margin-top: var(--s-7);
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <tab-header title="New entry" back href="dashboard.html"></tab-header>
+
+    <main class="no-nav">
+      <div class="add-wrap">
+      <div class="seg" role="tablist">
+        <button role="tab" aria-selected="true">Loan</button>
+        <button role="tab" aria-selected="false">Bill payment</button>
+        <button role="tab" aria-selected="false">Payment in</button>
+      </div>
+
+      <div class="amount-stage">
+        <div class="label">Amount lent</div>
+        <input class="amount-input" inputmode="decimal" placeholder="$0.00" value="$120.00" />
+        <div class="chips">
+          <tab-button variant="ghost" size="sm">$20</tab-button>
+          <tab-button variant="ghost" size="sm">$50</tab-button>
+          <tab-button variant="ghost" size="sm">$100</tab-button>
+          <tab-button variant="ghost" size="sm">$200</tab-button>
+        </div>
+      </div>
+
+      <div class="stack">
+        <tab-input label="What was it for?" placeholder="e.g. groceries" value="Groceries — Loblaws"></tab-input>
+        <tab-input label="When" type="date" value="2026-05-18"></tab-input>
+        <tab-input label="Method" placeholder="cash, e-transfer, …" value="Cash"></tab-input>
+        <tab-input label="Note (optional)" placeholder="Anything you want recorded" hint="This shows on the shareable statement, so keep it factual."></tab-input>
+      </div>
+
+      <div class="submit">
+        <tab-button full>Save entry</tab-button>
+      </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

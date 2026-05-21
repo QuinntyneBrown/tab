@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#2E2E30" />
+  <title>tab — recurring bills</title>
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <script src="assets/js/components.js" defer></script>
+  <style>
+    .lede {
+      color: var(--c-muted);
+      font-size: clamp(13px, 0.4vw + 12px, 15px);
+      line-height: 1.55;
+      margin: var(--s-3) 0 var(--s-5);
+      max-width: 60ch;
+    }
+    .bills-grid {
+      display: grid;
+      gap: var(--s-4);
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 720px)  { .bills-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .bill-card { padding: var(--s-5); display: flex; flex-direction: column; height: 100%; }
+    .bill-top {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: var(--s-3);
+      margin-bottom: var(--s-4);
+    }
+    .bill-name { font-size: clamp(16px, 0.4vw + 15px, 18px); font-weight: 600; color: var(--c-text-strong); }
+    .bill-meta { color: var(--c-muted); font-size: 13px; margin-top: 2px; }
+    .bill-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s-3);
+      border-top: 1px solid var(--c-hairline);
+      padding-top: var(--s-4);
+    }
+    .bill-grid .cell .k { color: var(--c-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
+    .bill-grid .cell .v { margin-top: 4px; }
+    .bill-actions {
+      display: flex; gap: var(--s-2);
+      margin-top: auto;
+      padding-top: var(--s-4);
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <tab-header title="Recurring bills" back href="dashboard.html">
+      <tab-button slot="action" variant="quiet" size="sm">＋ New</tab-button>
+    </tab-header>
+
+    <main>
+      <p class="lede">
+        Bills auto-create on their due date. When you mark one paid in full,
+        half is added to Ray's balance automatically.
+      </p>
+
+      <div class="bills-grid">
+        <tab-card class="bill-card">
+          <div class="bill-top">
+            <div>
+              <div class="bill-name">Hydro</div>
+              <div class="bill-meta">Monthly · Toronto Hydro</div>
+            </div>
+            <tab-badge dot>Due in 4d</tab-badge>
+          </div>
+          <div class="bill-grid">
+            <div class="cell">
+              <div class="k">Expected</div>
+              <div class="v"><tab-amount value="168.00" size="md"></tab-amount></div>
+            </div>
+            <div class="cell">
+              <div class="k">Ray's half</div>
+              <div class="v"><tab-amount value="84.00" size="md"></tab-amount></div>
+            </div>
+          </div>
+          <div class="bill-actions">
+            <tab-button full size="sm">Mark paid in full</tab-button>
+            <tab-button full variant="ghost" size="sm">Edit</tab-button>
+          </div>
+        </tab-card>
+
+        <tab-card class="bill-card">
+          <div class="bill-top">
+            <div>
+              <div class="bill-name">Internet</div>
+              <div class="bill-meta">Monthly · Bell</div>
+            </div>
+            <tab-badge quiet>Next: Jun 03</tab-badge>
+          </div>
+          <div class="bill-grid">
+            <div class="cell">
+              <div class="k">Last paid</div>
+              <div class="v"><tab-amount value="81.00" size="md" muted></tab-amount></div>
+            </div>
+            <div class="cell">
+              <div class="k">Ray's half</div>
+              <div class="v"><tab-amount value="40.50" size="md"></tab-amount></div>
+            </div>
+          </div>
+          <div class="bill-actions">
+            <tab-button full size="sm">Log this month</tab-button>
+            <tab-button full variant="ghost" size="sm">Edit</tab-button>
+          </div>
+        </tab-card>
+
+        <tab-card class="bill-card">
+          <div class="bill-top">
+            <div>
+              <div class="bill-name">Streaming bundle</div>
+              <div class="bill-meta">Monthly · Netflix + Spotify</div>
+            </div>
+            <tab-badge quiet>Next: Jun 12</tab-badge>
+          </div>
+          <div class="bill-grid">
+            <div class="cell">
+              <div class="k">Expected</div>
+              <div class="v"><tab-amount value="32.00" size="md"></tab-amount></div>
+            </div>
+            <div class="cell">
+              <div class="k">Ray's half</div>
+              <div class="v"><tab-amount value="16.00" size="md"></tab-amount></div>
+            </div>
+          </div>
+          <div class="bill-actions">
+            <tab-button full size="sm">Log this month</tab-button>
+            <tab-button full variant="ghost" size="sm">Edit</tab-button>
+          </div>
+        </tab-card>
+
+        <tab-card class="bill-card">
+          <div class="bill-top">
+            <div>
+              <div class="bill-name">Phone plan</div>
+              <div class="bill-meta">Monthly · Freedom</div>
+            </div>
+            <tab-badge quiet>Next: Jun 18</tab-badge>
+          </div>
+          <div class="bill-grid">
+            <div class="cell">
+              <div class="k">Expected</div>
+              <div class="v"><tab-amount value="55.00" size="md"></tab-amount></div>
+            </div>
+            <div class="cell">
+              <div class="k">Ray's half</div>
+              <div class="v"><tab-amount value="27.50" size="md"></tab-amount></div>
+            </div>
+          </div>
+          <div class="bill-actions">
+            <tab-button full size="sm">Log this month</tab-button>
+            <tab-button full variant="ghost" size="sm">Edit</tab-button>
+          </div>
+        </tab-card>
+      </div>
+    </main>
+
+    <tab-nav active="bills"></tab-nav>
+  </div>
+</body>
+</html>

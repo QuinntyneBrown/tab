@@ -1,0 +1,18 @@
+@use '../tokens' as tokens;
+
+:host {
+  @include tokens.tab-tokens;
+  display: block;
+  text-transform: uppercase;
+  color: var(--c-muted);
+  font-weight: 600;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  line-height: 1.2;
+}
+
+:host([size='xs']) { font-size: 11px; }
+
+:host([tracking='snug'])  { letter-spacing: 0.08em; }
+:host([tracking='extra']) { letter-spacing: 0.14em; }

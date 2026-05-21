@@ -1,0 +1,48 @@
+@use '../tokens' as tokens;
+
+:host {
+  @include tokens.tab-tokens;
+  display: inline-flex;
+  align-items: baseline;
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  color: var(--c-text-strong);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.amount__sign {
+  color: var(--c-muted);
+  margin-right: 0.08em;
+}
+
+.amount__currency {
+  font-size: 0.55em;
+  color: var(--c-muted);
+  margin-right: 0.12em;
+  font-weight: 600;
+  transform: translateY(-0.45em);
+}
+
+.amount__whole {
+  font-weight: 500;
+}
+
+.amount__cents {
+  font-size: 0.5em;
+  color: var(--c-muted);
+  margin-left: 0.08em;
+  transform: translateY(-0.45em);
+  font-weight: 500;
+}
+
+:host([size='hero']) { font-size: clamp(48px, 7vw + 16px, 88px); }
+:host([size='2xl'])  { font-size: clamp(32px, 3vw + 18px, 52px); }
+:host([size='xl'])   { font-size: clamp(24px, 1.4vw + 18px, 32px); }
+:host([size='md'])   { font-size: clamp(16px, 0.4vw + 15px, 20px); }
+:host([size='sm'])   { font-size: clamp(13px, 0.2vw + 12px, 15px); }
+
+:host([muted]) { color: var(--c-muted); }
+:host([muted]) .amount__cents,
+:host([muted]) .amount__currency { color: var(--c-text-faint); }

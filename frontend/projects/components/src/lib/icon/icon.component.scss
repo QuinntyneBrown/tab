@@ -1,0 +1,12 @@
+@use '../tokens' as tokens;
+
+:host {
+  @include tokens.tab-tokens;
+  display: inline-flex;
+  line-height: 0;
+  color: inherit;
+}
+
+.icon {
+  display: block;
+}

@@ -1,0 +1,16 @@
+<div class="amount-input">
+  <div class="amount-input__label">{{ label }}</div>
+  <input
+    class="amount-input__control"
+    [attr.inputmode]="inputmode"
+    [placeholder]="placeholder"
+    [value]="value"
+    (input)="onInput($event)" />
+  <div class="amount-input__chips">
+    @for (c of chips; track c) {
+      <tab-button variant="ghost" size="sm" (click)="applyChip(c)">
+        {{ currency }}{{ c }}
+      </tab-button>
+    }
+  </div>
+</div>

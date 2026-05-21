@@ -1,0 +1,8 @@
+<div class="row" (click)="onClick($event)">
+  <slot name="leading"></slot>
+  <div class="row__body">
+    <slot name="title"></slot>
+    <slot name="meta"></slot>
+  </div>
+  <slot name="trailing"></slot>
+</div>

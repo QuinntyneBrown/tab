@@ -1,0 +1,30 @@
+@use '../tokens' as tokens;
+
+:host {
+  @include tokens.tab-tokens;
+  display: inline-block;
+  font-family: var(--font-num);
+  font-weight: 700;
+  color: var(--c-text-strong);
+  font-size: 22px;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+:host([size='sm']) { font-size: 18px; letter-spacing: -0.03em; }
+:host([size='lg']) { font-size: 32px; letter-spacing: -0.04em; }
+:host([size='xl']) { font-size: 44px; letter-spacing: -0.04em; }
+
+.brand__dot {
+  color: var(--c-muted);
+}
+
+.brand__dot--pill {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--c-text-strong);
+  border-radius: 50%;
+  vertical-align: 0.1em;
+  margin-left: 1px;
+}

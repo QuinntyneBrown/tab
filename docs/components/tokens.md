@@ -1,0 +1,195 @@
+# tokens — Design tokens
+
+**File:** `projects/components/src/lib/tokens.scss`
+**Mock reference:** `docs/mocks/assets/css/tokens.css`
+**Consumed by:** every component (via `@use` or re-declared on `:host`)
+
+## Purpose
+
+Single source of truth for palette, type, spacing, shape, motion. Every component
+declares these tokens on its `:host` so shadow-DOM children resolve them without
+relying on global cascade. Global styles also export them at `:root` for the app
+shell.
+
+## Tokens
+
+### Palette — Adobe dark monochrome
+
+| Token | Value | Use |
+|---|---|---|
+| `--c-bg` | `#2E2E30` | App background |
+| `--c-surface` | `#313133` | Cards |
+| `--c-elevated` | `#3A3A3D` | Inputs, hover, avatars, badges |
+| `--c-muted` | `#77777C` | Secondary text, eyebrows |
+| `--c-text` | `#B4B4BC` | Body text |
+| `--c-text-strong` | `#E6E6EA` | Headlines, amounts, strong UI |
+| `--c-text-faint` | `#5C5C61` | Disabled / placeholder text |
+| `--c-hairline` | `rgba(180,180,188,0.08)` | Card border, row divider |
+| `--c-hairline-strong` | `rgba(180,180,188,0.16)` | Strong dividers, focus borders |
+| `--c-focus` | `rgba(180,180,188,0.55)` | Focus ring |
+| `--c-overlay` | `rgba(0,0,0,0.48)` | Modal scrim |
+
+**No semantic color signaling.** Debt / paid states are conveyed by `font-weight`,
+`size`, and `opacity` only. Never introduce green/red.
+
+### Type
+
+| Token | Value | Use |
+|---|---|---|
+| `--font-sans` | `ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif` | All UI text |
+| `--font-num` | `ui-rounded, -apple-system, "SF Pro Display", "Inter", sans-serif` | Money, brand mark |
+
+Fluid scale (`clamp(min, viewport, max)`):
+
+| Token | Value |
+|---|---|
+| `--fs-xs` | `clamp(10px, 0.7vw + 8px, 12px)` |
+| `--fs-sm` | `clamp(12px, 0.4vw + 11px, 14px)` |
+| `--fs-md` | `clamp(14px, 0.4vw + 13px, 16px)` |
+| `--fs-lg` | `clamp(17px, 0.5vw + 15px, 19px)` |
+| `--fs-xl` | `clamp(20px, 1vw + 16px, 26px)` |
+| `--fs-2xl` | `clamp(28px, 2vw + 20px, 40px)` |
+| `--fs-hero` | `clamp(48px, 7vw + 16px, 88px)` |
+
+Line heights: `--lh-tight: 1.1`, `--lh-snug: 1.3`, `--lh-body: 1.5`.
+
+Font features: `font-feature-settings: "ss01", "cv11"` on `html`.
+Tabular numerals on money: `font-variant-numeric: tabular-nums`.
+
+### Spacing — 4 px base, lightly fluid
+
+| Token | Value |
+|---|---|
+| `--s-1` | `4px` |
+| `--s-2` | `8px` |
+| `--s-3` | `12px` |
+| `--s-4` | `16px` |
+| `--s-5` | `20px` |
+| `--s-6` | `24px` |
+| `--s-7` | `32px` |
+| `--s-8` | `clamp(36px, 4vw, 56px)` |
+| `--s-9` | `clamp(48px, 6vw, 72px)` |
+| `--s-10` | `clamp(64px, 8vw, 96px)` |
+
+### Layout
+
+| Token | Value |
+|---|---|
+| `--content-max` | `1200px` |
+| `--content-pad` | `clamp(16px, 4vw, 56px)` (becomes `72px` at ≥ 1280px) |
+| `--rail-w` | `240px` |
+
+### Shape
+
+| Token | Value |
+|---|---|
+| `--r-sm` | `6px` |
+| `--r-md` | `10px` |
+| `--r-lg` | `16px` |
+| `--r-xl` | `24px` |
+| `--r-pill` | `999px` |
+
+### Motion
+
+| Token | Value |
+|---|---|
+| `--ease` | `cubic-bezier(0.2, 0.7, 0.2, 1)` |
+| `--dur-fast` | `120ms` |
+| `--dur` | `200ms` |
+| `--dur-slow` | `360ms` |
+
+`@media (prefers-reduced-motion: reduce)` collapses all durations to `0ms`.
+
+### Elevation
+
+| Token | Value |
+|---|---|
+| `--shadow-1` | `0 1px 0 rgba(255,255,255,0.02) inset, 0 1px 2px rgba(0,0,0,0.35)` |
+| `--shadow-2` | `0 1px 0 rgba(255,255,255,0.03) inset, 0 8px 24px rgba(0,0,0,0.45)` |
+
+## Implementation
+
+```scss
+// projects/components/src/lib/tokens.scss
+@mixin tab-tokens {
+  --c-bg: #2E2E30;
+  --c-surface: #313133;
+  --c-elevated: #3A3A3D;
+  --c-muted: #77777C;
+  --c-text: #B4B4BC;
+  --c-text-strong: #E6E6EA;
+  --c-text-faint: #5C5C61;
+  --c-hairline: rgba(180, 180, 188, 0.08);
+  --c-hairline-strong: rgba(180, 180, 188, 0.16);
+  --c-focus: rgba(180, 180, 188, 0.55);
+  --c-overlay: rgba(0, 0, 0, 0.48);
+
+  --font-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-num: ui-rounded, -apple-system, "SF Pro Display", "Inter", sans-serif;
+
+  --fs-xs: clamp(10px, 0.7vw + 8px, 12px);
+  --fs-sm: clamp(12px, 0.4vw + 11px, 14px);
+  --fs-md: clamp(14px, 0.4vw + 13px, 16px);
+  --fs-lg: clamp(17px, 0.5vw + 15px, 19px);
+  --fs-xl: clamp(20px, 1vw + 16px, 26px);
+  --fs-2xl: clamp(28px, 2vw + 20px, 40px);
+  --fs-hero: clamp(48px, 7vw + 16px, 88px);
+
+  --lh-tight: 1.1;
+  --lh-snug: 1.3;
+  --lh-body: 1.5;
+
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px; --s-5: 20px;
+  --s-6: 24px; --s-7: 32px;
+  --s-8: clamp(36px, 4vw, 56px);
+  --s-9: clamp(48px, 6vw, 72px);
+  --s-10: clamp(64px, 8vw, 96px);
+
+  --content-max: 1200px;
+  --content-pad: clamp(16px, 4vw, 56px);
+  --rail-w: 240px;
+
+  --r-sm: 6px; --r-md: 10px; --r-lg: 16px; --r-xl: 24px; --r-pill: 999px;
+
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur-fast: 120ms;
+  --dur: 200ms;
+  --dur-slow: 360ms;
+
+  --shadow-1: 0 1px 0 rgba(255, 255, 255, 0.02) inset,
+              0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-2: 0 1px 0 rgba(255, 255, 255, 0.03) inset,
+              0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-fast: 0ms; --dur: 0ms; --dur-slow: 0ms; }
+}
+
+@media (min-width: 1280px) {
+  :root { --content-pad: 72px; }
+}
+```
+
+`projects/tab/src/styles.scss`:
+
+```scss
+@use 'components/tokens' as tokens;
+:root { @include tokens.tab-tokens; }
+```
+
+Every component SCSS:
+
+```scss
+@use 'components/tokens' as tokens;
+:host { @include tokens.tab-tokens; display: block; }
+```
+
+## Acceptance criteria
+
+- [ ] Every value above appears unmodified in `tokens.scss`.
+- [ ] The `tab-tokens` mixin is applied on `:root` (global) **and** on `:host`
+      of every shadow-DOM component, so values resolve inside shadow boundaries.
+- [ ] Reduced-motion override collapses all three duration tokens.
+- [ ] `--content-pad` widens to `72px` at ≥ 1280 px.

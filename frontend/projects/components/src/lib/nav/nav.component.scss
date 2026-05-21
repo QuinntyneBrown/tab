@@ -1,0 +1,117 @@
+@use '../tokens' as tokens;
+
+:host {
+  @include tokens.tab-tokens;
+  position: sticky;
+  bottom: 0;
+  display: block;
+  background: rgba(46, 46, 48, 0.86);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--c-hairline-strong);
+  z-index: 10;
+}
+
+.nav__brand-rail {
+  display: none;
+}
+
+.nav__list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 8px 8px max(8px, env(safe-area-inset-bottom));
+  gap: 2px;
+}
+
+.nav__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 6px;
+  color: var(--c-muted);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: 12px;
+  transition: color var(--ease) 160ms, background var(--ease) 160ms;
+  min-width: 0;
+}
+.nav__link:hover {
+  color: var(--c-text);
+}
+
+.nav__link--active {
+  color: var(--c-text-strong);
+}
+.nav__link--active .nav__icon {
+  stroke: var(--c-text-strong);
+}
+
+.nav__label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav__icon {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+/* Desktop — vertical rail */
+@media (min-width: 960px) {
+  :host {
+    position: static;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-top: none;
+    border-right: 1px solid var(--c-hairline-strong);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .nav__brand-rail {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 28px 24px 24px;
+    font-family: var(--font-num);
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: -0.04em;
+    color: var(--c-text-strong);
+  }
+  .nav__brand-dot {
+    color: var(--c-muted);
+  }
+  .nav__list {
+    grid-template-columns: 1fr;
+    grid-auto-rows: max-content;
+    padding: 8px 12px;
+    gap: 2px;
+    flex: 1;
+  }
+  .nav__link {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 14px;
+    padding: 12px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 10px;
+  }
+  .nav__link--active {
+    background: var(--c-elevated);
+  }
+  .nav__label {
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,17 @@
+<div class="nav__brand-rail" aria-hidden="true">
+  tab<span class="nav__brand-dot">.</span>
+</div>
+<nav class="nav__list" aria-label="Primary">
+  @for (item of items; track item.key) {
+    <a
+      class="nav__link"
+      [class.nav__link--active]="active === item.key"
+      [attr.href]="item.href"
+      [attr.data-k]="item.key"
+      [attr.aria-current]="active === item.key ? 'page' : null"
+      (click)="onNav($event, item)">
+      <svg class="nav__icon" viewBox="0 0 24 24" aria-hidden="true" [innerHTML]="iconFor(item)"></svg>
+      <span class="nav__label">{{ item.label }}</span>
+    </a>
+  }
+</nav>

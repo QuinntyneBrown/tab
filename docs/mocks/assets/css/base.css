@@ -1,0 +1,193 @@
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+
+html {
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-family: var(--font-sans);
+  font-size: var(--fs-md);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "ss01", "cv11";
+}
+
+body {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* ============================================================
+   .app — mobile-first shell.
+   Mobile : full-bleed flex column, bottom nav.
+   Tablet : same flow, wider gutters & larger type via tokens.
+   Desktop: grid with left sidebar (auto-applied to pages with <tab-nav>).
+   Login/Add (no <tab-nav>) keep a centered narrow card on all sizes.
+============================================================ */
+.app {
+  width: 100%;
+  min-height: 100dvh;
+  background: var(--c-bg);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+main {
+  flex: 1 1 auto;
+  width: 100%;
+  padding: var(--s-5) var(--content-pad) calc(var(--s-9) + var(--s-7));
+  overflow-y: auto;
+}
+main.no-nav { padding-bottom: var(--s-8); }
+
+/* Tablet — single column, more breathing room */
+@media (min-width: 640px) {
+  main { padding-top: var(--s-7); }
+  .app:not(:has(tab-nav)) {
+    max-width: 560px;
+    margin-inline: auto;
+  }
+}
+
+/* Desktop — sidebar layout for app pages */
+@media (min-width: 960px) {
+  body { background: var(--c-bg); }
+
+  .app:has(tab-nav) {
+    max-width: var(--content-max);
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: var(--rail-w) 1fr;
+    grid-template-rows: auto 1fr;
+    align-items: stretch;
+  }
+  /* tab-nav fills the left rail, full height */
+  .app:has(tab-nav) > tab-nav {
+    grid-column: 1;
+    grid-row: 1 / -1;
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100dvh;
+    min-height: 0;
+  }
+  /* Everything else flows in the right column in DOM order */
+  .app:has(tab-nav) > *:not(tab-nav) {
+    grid-column: 2;
+    min-width: 0;
+  }
+  .app:has(tab-nav) main {
+    padding: var(--s-8) var(--content-pad) var(--s-9);
+    max-width: 920px;
+  }
+
+  /* Login / Add — centered narrow card with framing */
+  .app:not(:has(tab-nav)) {
+    max-width: 480px;
+    margin: var(--s-9) auto;
+    min-height: auto;
+    border-radius: var(--r-xl);
+    border: 1px solid var(--c-hairline-strong);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+    overflow: hidden;
+  }
+  body:has(.app:not(:has(tab-nav))) {
+    background: radial-gradient(circle at 50% 0%, #38383b 0%, #1d1d1f 70%);
+  }
+}
+
+/* Ultra-wide — cap content & breathe more */
+@media (min-width: 1280px) {
+  :root { --content-pad: 72px; }
+}
+
+/* ============================================================
+   Typography & utilities
+============================================================ */
+h1, h2, h3, h4 {
+  margin: 0;
+  color: var(--c-text-strong);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+h1 { font-size: var(--fs-2xl); line-height: var(--lh-tight); letter-spacing: -0.02em; }
+h2 { font-size: var(--fs-xl); line-height: var(--lh-snug); }
+h3 { font-size: var(--fs-lg); }
+h4 { font-size: var(--fs-md); }
+
+p { margin: 0; color: var(--c-text); }
+
+.muted    { color: var(--c-muted); }
+.faint    { color: var(--c-text-faint); }
+.strong   { color: var(--c-text-strong); }
+.tabular  { font-variant-numeric: tabular-nums; }
+.center   { text-align: center; }
+
+.stack > * + * { margin-top: var(--s-4); }
+.stack-sm > * + * { margin-top: var(--s-2); }
+.stack-lg > * + * { margin-top: var(--s-6); }
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+}
+.row-between { justify-content: space-between; flex-wrap: nowrap; }
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: var(--fs-xs);
+  color: var(--c-muted);
+  font-weight: 600;
+}
+
+a { color: var(--c-text-strong); text-decoration: none; }
+a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+
+::selection { background: var(--c-text); color: var(--c-bg); }
+
+:focus-visible {
+  outline: 2px solid var(--c-focus);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+main::-webkit-scrollbar { width: 8px; }
+main::-webkit-scrollbar-thumb { background: var(--c-elevated); border-radius: var(--r-pill); }
+
+.brand {
+  font-family: var(--font-num);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--c-text-strong);
+}
+.brand .dot {
+  display: inline-block;
+  width: 6px; height: 6px;
+  background: var(--c-text-strong);
+  border-radius: 50%;
+  vertical-align: 0.1em;
+  margin-left: 1px;
+}
+
+/* Responsive grids reusable across pages */
+.grid-cards {
+  display: grid;
+  gap: var(--s-4);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 720px)  { .grid-cards.cols-2 { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1080px) { .grid-cards.cols-3 { grid-template-columns: repeat(3, 1fr); } }
+
+.two-col {
+  display: grid;
+  gap: var(--s-5);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 880px) { .two-col { grid-template-columns: 1.4fr 1fr; } }

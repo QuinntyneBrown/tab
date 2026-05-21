@@ -1,0 +1,49 @@
+@use '../tokens' as tokens;
+
+:host {
+  @include tokens.tab-tokens;
+  display: block;
+}
+
+.amount-stage {
+  text-align: center;
+  padding: var(--s-7) 0 var(--s-5);
+}
+
+.label {
+  color: var(--c-muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 600;
+  margin-bottom: var(--s-3);
+}
+
+.amount-input {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  color: var(--c-text-strong);
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  font-size: 64px;
+  letter-spacing: -0.03em;
+  text-align: center;
+  caret-color: var(--c-text);
+}
+.amount-input::placeholder { color: var(--c-text-faint); }
+.amount-input:focus-visible {
+  outline: 2px solid var(--c-focus);
+  outline-offset: 4px;
+  border-radius: var(--r-sm);
+}
+
+.chips {
+  display: flex;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: var(--s-3);
+}

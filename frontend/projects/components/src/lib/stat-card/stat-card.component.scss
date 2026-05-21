@@ -1,0 +1,27 @@
+@use '../tokens' as tokens;
+
+:host {
+  @include tokens.tab-tokens;
+  display: block;
+}
+
+.stat-card {
+  padding: var(--s-5);
+  background: var(--c-surface);
+  border: 1px solid var(--c-hairline);
+  border-radius: 14px;
+}
+
+.stat-card--hero {
+  background: linear-gradient(180deg, #3A3A3D 0%, #313133 100%);
+  border-color: var(--c-hairline-strong);
+}
+
+.stat-card__label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--c-muted);
+  font-weight: 600;
+  margin-bottom: 6px;
+}

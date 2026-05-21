@@ -1,0 +1,29 @@
+@use '../tokens' as tokens;
+
+:host {
+  @include tokens.tab-tokens;
+  display: block;
+}
+
+.month-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 0 0 var(--s-3);
+  padding: 0 var(--s-1);
+}
+
+h3 {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+  font-weight: 600;
+  margin: 0;
+}
+
+.total {
+  color: var(--c-text);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}

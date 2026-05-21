@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#2E2E30" />
+  <title>tab — loans</title>
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <script src="assets/js/components.js" defer></script>
+  <style>
+    .summary-strip {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--s-3);
+      margin-bottom: var(--s-5);
+    }
+    @media (min-width: 720px) {
+      .summary-strip { grid-template-columns: 1.4fr 1fr 1fr; }
+    }
+    .stat {
+      padding: var(--s-5);
+      background: var(--c-surface);
+      border: 1px solid var(--c-hairline);
+      border-radius: 14px;
+    }
+    .stat .k { font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--c-muted); font-weight: 600; margin-bottom: 6px; }
+    .stat.hero { background: linear-gradient(180deg, #3A3A3D 0%, #313133 100%); border-color: var(--c-hairline-strong); }
+
+    .filters {
+      display: flex; gap: var(--s-2);
+      margin: var(--s-3) 0 var(--s-5);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .filters::-webkit-scrollbar { display: none; }
+    .filters tab-button { white-space: nowrap; flex-shrink: 0; }
+
+    .months {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--s-6);
+    }
+    @media (min-width: 1080px) {
+      .months { grid-template-columns: 1fr 1fr; gap: var(--s-7); }
+    }
+
+    .month-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin: 0 0 var(--s-3);
+      padding: 0 var(--s-1);
+    }
+    .month-head h3 { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-muted); font-weight: 600; }
+    .month-head .total { color: var(--c-text); font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <tab-header title="Loans" back href="dashboard.html">
+      <tab-button slot="action" variant="quiet" size="sm">
+        <a href="add.html?mode=loan" style="color:inherit;text-decoration:none">＋ Add</a>
+      </tab-button>
+    </tab-header>
+
+    <main>
+      <div class="summary-strip">
+        <div class="stat hero">
+          <div class="k">Outstanding</div>
+          <tab-amount value="1284.50" size="2xl"></tab-amount>
+        </div>
+        <div class="stat">
+          <div class="k">This month</div>
+          <tab-amount value="198.42" size="xl"></tab-amount>
+        </div>
+        <div class="stat">
+          <div class="k">Paid back YTD</div>
+          <tab-amount value="100.00" size="xl" muted></tab-amount>
+        </div>
+      </div>
+
+      <div class="filters">
+        <tab-button variant="ghost" size="sm">All</tab-button>
+        <tab-button variant="quiet" size="sm">Loans</tab-button>
+        <tab-button variant="quiet" size="sm">Bills</tab-button>
+        <tab-button variant="quiet" size="sm">Payments</tab-button>
+      </div>
+
+      <div class="months">
+        <section>
+          <div class="month-head">
+            <h3>May 2026</h3>
+            <span class="total tabular">+$198.42</span>
+          </div>
+          <tab-card padding="sm">
+            <tab-row interactive>
+              <tab-avatar slot="leading" name="G"></tab-avatar>
+              <span slot="title">Groceries — Loblaws</span>
+              <span slot="meta">May 18 · cash</span>
+              <tab-amount slot="trailing" value="120.00" size="md"></tab-amount>
+            </tab-row>
+            <tab-row interactive last>
+              <tab-avatar slot="leading" name="H"></tab-avatar>
+              <span slot="title">Hydro — April</span>
+              <span slot="meta">May 02 · half of $156.84</span>
+              <tab-amount slot="trailing" value="78.42" size="md"></tab-amount>
+            </tab-row>
+          </tab-card>
+        </section>
+
+        <section>
+          <div class="month-head">
+            <h3>April 2026</h3>
+            <span class="total tabular">−$59.50</span>
+          </div>
+          <tab-card padding="sm">
+            <tab-row interactive>
+              <tab-avatar slot="leading" name="B"></tab-avatar>
+              <span slot="title">Bus fare</span>
+              <span slot="meta">Apr 27</span>
+              <tab-amount slot="trailing" value="40.00" size="md"></tab-amount>
+            </tab-row>
+            <tab-row interactive>
+              <tab-avatar slot="leading" name="P"></tab-avatar>
+              <span slot="title">Payment received</span>
+              <span slot="meta">Apr 14 · e-transfer</span>
+              <tab-amount slot="trailing" value="100.00" size="md" muted sign="−"></tab-amount>
+            </tab-row>
+            <tab-row interactive last>
+              <tab-avatar slot="leading" name="I"></tab-avatar>
+              <span slot="title">Internet — March</span>
+              <span slot="meta">Apr 03 · half of $81.00</span>
+              <tab-amount slot="trailing" value="40.50" size="md"></tab-amount>
+            </tab-row>
+          </tab-card>
+        </section>
+
+        <section>
+          <div class="month-head">
+            <h3>March 2026</h3>
+            <span class="total tabular">+$345.00</span>
+          </div>
+          <tab-card padding="sm">
+            <tab-row interactive>
+              <tab-avatar slot="leading" name="R"></tab-avatar>
+              <span slot="title">Rent help</span>
+              <span slot="meta">Mar 28</span>
+              <tab-amount slot="trailing" value="300.00" size="md"></tab-amount>
+            </tab-row>
+            <tab-row interactive last>
+              <tab-avatar slot="leading" name="M"></tab-avatar>
+              <span slot="title">Medication</span>
+              <span slot="meta">Mar 12</span>
+              <tab-amount slot="trailing" value="45.00" size="md"></tab-amount>
+            </tab-row>
+          </tab-card>
+        </section>
+      </div>
+    </main>
+
+    <tab-nav active="loans"></tab-nav>
+  </div>
+</body>
+</html>

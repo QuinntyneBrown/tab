@@ -1,0 +1,23 @@
+@use '../tokens' as tokens;
+
+:host {
+  @include tokens.tab-tokens;
+  display: block;
+}
+
+.ledger-head {
+  display: grid;
+  grid-template-columns: 1fr 90px 100px;
+  gap: var(--s-3);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--c-muted);
+  padding: 0 var(--s-2) var(--s-2);
+  font-weight: 600;
+  border-bottom: 1px solid var(--c-hairline-strong);
+}
+
+.ledger-head .num {
+  text-align: right;
+}

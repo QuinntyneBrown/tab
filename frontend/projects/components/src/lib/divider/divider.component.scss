@@ -1,0 +1,13 @@
+@use '../tokens' as tokens;
+
+:host {
+  @include tokens.tab-tokens;
+  display: block;
+  height: 1px;
+  background: var(--c-hairline);
+  margin: 16px 0;
+}
+
+:host([strong]) {
+  background: var(--c-hairline-strong);
+}

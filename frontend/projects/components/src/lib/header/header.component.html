@@ -1,0 +1,25 @@
+<header class="header">
+  @if (back) {
+    <a class="header__back" [attr.href]="href" [attr.aria-label]="backLabel">
+      <svg
+        class="header__arrow"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true">
+        <path d="M15 6l-6 6 6 6" />
+      </svg>
+    </a>
+  } @else {
+    <div class="header__spacer header__spacer--left"></div>
+  }
+
+  <div class="header__title">{{ title }}</div>
+
+  <slot name="action">
+    <div class="header__spacer header__spacer--right"></div>
+  </slot>
+</header>

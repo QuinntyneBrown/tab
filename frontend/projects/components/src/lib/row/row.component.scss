@@ -1,0 +1,61 @@
+@use '../tokens' as tokens;
+
+:host {
+  @include tokens.tab-tokens;
+  display: block;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 4px;
+  border-bottom: 1px solid var(--c-hairline);
+  transition: background var(--ease) 120ms;
+}
+
+:host([interactive]) .row {
+  cursor: pointer;
+  padding: 14px;
+  margin: 0 -10px;
+  border-radius: 10px;
+  border-bottom: 1px solid var(--c-hairline);
+}
+:host([interactive]) .row:hover {
+  background: var(--c-elevated);
+}
+
+:host([last]) .row {
+  border-bottom: none;
+}
+
+::slotted([slot='leading']) {
+  display: inline-flex;
+  align-items: center;
+}
+
+.row__body {
+  min-width: 0;
+}
+
+::slotted([slot='title']) {
+  display: block;
+  color: var(--c-text-strong);
+  font-weight: 500;
+  font-size: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+::slotted([slot='meta']) {
+  display: block;
+  color: var(--c-muted);
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+::slotted([slot='trailing']) {
+  justify-self: end;
+}

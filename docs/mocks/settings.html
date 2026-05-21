@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#2E2E30" />
+  <title>tab — settings</title>
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <script src="assets/js/components.js" defer></script>
+  <style>
+    .section {
+      margin-top: var(--s-6);
+    }
+    .section h3 {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--c-muted);
+      font-weight: 600;
+      margin: 0 0 var(--s-3) var(--s-2);
+    }
+    .who-card {
+      display: flex; align-items: center; gap: var(--s-4); padding: var(--s-5);
+    }
+    .who-card .meta { flex: 1; }
+    .who-card .name { color: var(--c-text-strong); font-weight: 600; font-size: 16px; }
+    .who-card .sub  { color: var(--c-muted); font-size: 13px; margin-top: 2px; }
+    .signout { margin-top: var(--s-7); max-width: 320px; }
+    .people {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--s-3);
+    }
+    @media (min-width: 760px) {
+      .people { grid-template-columns: 1fr 1fr; gap: var(--s-4); }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <tab-header title="Settings" back href="dashboard.html"></tab-header>
+
+    <main>
+      <div class="section">
+        <h3>People</h3>
+        <div class="people">
+          <tab-card padding="sm">
+            <div class="who-card">
+              <tab-avatar name="Quinntyne Brown" size="lg"></tab-avatar>
+              <div class="meta">
+                <div class="name">Quinntyne Brown</div>
+                <div class="sub">You · quinntynebrown@gmail.com</div>
+              </div>
+              <tab-button variant="quiet" size="sm">Edit</tab-button>
+            </div>
+          </tab-card>
+          <tab-card padding="sm">
+            <div class="who-card">
+              <tab-avatar name="Raymond Brown" size="lg"></tab-avatar>
+              <div class="meta">
+                <div class="name">Raymond Brown</div>
+                <div class="sub">Counterparty · added Mar 2026</div>
+              </div>
+              <tab-button variant="quiet" size="sm">Edit</tab-button>
+            </div>
+          </tab-card>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>Preferences</h3>
+        <tab-card padding="sm">
+          <tab-row interactive>
+            <span slot="title">Currency</span>
+            <span slot="meta">Used across the app</span>
+            <span slot="trailing" class="muted">CAD</span>
+          </tab-row>
+          <tab-row interactive>
+            <span slot="title">Default bill split</span>
+            <span slot="meta">Their share of shared bills</span>
+            <span slot="trailing" class="muted">50%</span>
+          </tab-row>
+          <tab-row interactive>
+            <span slot="title">Reminders</span>
+            <span slot="meta">Nudge before bills are due</span>
+            <span slot="trailing" class="muted">3 days</span>
+          </tab-row>
+          <tab-row interactive last>
+            <span slot="title">Statement tone</span>
+            <span slot="meta">Wording used on shared statements</span>
+            <span slot="trailing" class="muted">Neutral</span>
+          </tab-row>
+        </tab-card>
+      </div>
+
+      <div class="section">
+        <h3>Data</h3>
+        <tab-card padding="sm">
+          <tab-row interactive>
+            <span slot="title">Export all entries</span>
+            <span slot="meta">CSV · for your records</span>
+          </tab-row>
+          <tab-row interactive last>
+            <span slot="title">Share a statement</span>
+            <span slot="meta">Read-only link</span>
+          </tab-row>
+        </tab-card>
+      </div>
+
+      <div class="signout">
+        <tab-button full variant="ghost">
+          <a href="login.html" style="color:inherit;text-decoration:none">Sign out</a>
+        </tab-button>
+      </div>
+    </main>
+
+    <tab-nav active="settings"></tab-nav>
+  </div>
+</body>
+</html>

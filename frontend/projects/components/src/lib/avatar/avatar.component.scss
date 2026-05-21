@@ -1,0 +1,32 @@
+@use '../tokens' as tokens;
+
+:host {
+  @include tokens.tab-tokens;
+  display: inline-flex;
+}
+
+.avatar__circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--c-elevated);
+  border: 1px solid var(--c-hairline-strong);
+  display: grid;
+  place-items: center;
+  color: var(--c-text-strong);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+
+:host([size='lg']) .avatar__circle {
+  width: 56px;
+  height: 56px;
+  font-size: 18px;
+}
+
+:host([size='sm']) .avatar__circle {
+  width: 28px;
+  height: 28px;
+  font-size: 11px;
+}

@@ -1,0 +1,33 @@
+@use '../tokens' as tokens;
+
+:host {
+  @include tokens.tab-tokens;
+  display: block;
+}
+
+.empty {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--c-muted);
+}
+
+.empty__glyph {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--c-elevated);
+  margin: 0 auto 16px;
+  display: grid;
+  place-items: center;
+  color: var(--c-text-strong);
+  font-size: 22px;
+  border: 1px solid var(--c-hairline-strong);
+}
+
+::slotted([slot='title']) {
+  display: block;
+  color: var(--c-text-strong);
+  font-weight: 600;
+  font-size: 17px;
+  margin-bottom: 6px;
+}

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#2E2E30" />
+  <title>tab — sign in</title>
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <script src="assets/js/components.js" defer></script>
+  <style>
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: var(--s-7) var(--s-6) var(--s-9);
+      max-width: 420px;
+      margin-inline: auto;
+      width: 100%;
+    }
+    .wordmark {
+      font-family: var(--font-num);
+      font-size: clamp(38px, 6vw + 12px, 56px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: var(--c-text-strong);
+      margin-bottom: var(--s-2);
+    }
+    .wordmark .accent { color: var(--c-muted); }
+    .tagline {
+      color: var(--c-muted);
+      font-size: 15px;
+      line-height: 1.5;
+      max-width: 26ch;
+      margin-bottom: var(--s-8);
+    }
+    .footer {
+      padding: var(--s-5) var(--s-6) var(--s-7);
+      text-align: center;
+      color: var(--c-text-faint);
+      font-size: 12px;
+    }
+    .legal a { color: var(--c-muted); }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section class="hero">
+      <div class="wordmark">tab<span class="accent">.</span></div>
+      <p class="tagline">A quiet ledger between two people. Lend, share bills, settle clearly.</p>
+
+      <form class="stack" onsubmit="event.preventDefault(); location.href='dashboard.html'">
+        <tab-input label="Email" type="email" placeholder="you@domain.com" value="quinntynebrown@gmail.com"></tab-input>
+        <tab-input label="Passcode" type="password" placeholder="••••••" hint="We'll text you a code if you forget."></tab-input>
+        <tab-button full type="submit">Sign in</tab-button>
+        <tab-button full variant="ghost" type="button">Use a magic link</tab-button>
+      </form>
+    </section>
+
+    <div class="footer legal">
+      <p>By signing in you agree to keep things kind, even when balances aren't.</p>
+    </div>
+  </div>
+</body>
+</html>

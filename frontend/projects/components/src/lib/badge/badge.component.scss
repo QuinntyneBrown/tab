@@ -1,0 +1,37 @@
+@use '../tokens' as tokens;
+
+:host {
+  @include tokens.tab-tokens;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--c-elevated);
+  border: 1px solid var(--c-hairline-strong);
+  color: var(--c-text);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-family: var(--font-sans);
+}
+
+:host([strong]) {
+  color: var(--c-text-strong);
+  background: var(--c-surface);
+}
+
+:host([quiet]) {
+  background: transparent;
+  color: var(--c-muted);
+  border-color: var(--c-hairline);
+}
+
+.badge__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.7;
+}

@@ -1,0 +1,80 @@
+@use '../tokens' as tokens;
+
+:host {
+  @include tokens.tab-tokens;
+  display: block;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 40px 1fr 40px;
+  align-items: center;
+  gap: 12px;
+  padding: 16px clamp(16px, 4vw, 56px) 8px;
+  background: var(--c-bg);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.header__title {
+  text-align: center;
+  font-size: clamp(14px, 0.3vw + 13px, 16px);
+  font-weight: 600;
+  color: var(--c-text-strong);
+  letter-spacing: -0.005em;
+}
+
+.header__back {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  color: var(--c-text);
+  border-radius: 999px;
+  text-decoration: none;
+}
+.header__back:hover {
+  background: var(--c-elevated);
+  color: var(--c-text-strong);
+}
+
+.header__arrow {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.header__spacer {
+  width: 40px;
+}
+
+::slotted([slot='action']) {
+  justify-self: end;
+}
+
+/* Desktop — left-aligned page title, back chevron collapses (rail handles nav) */
+@media (min-width: 960px) {
+  .header {
+    grid-template-columns: 1fr auto;
+    padding: 32px clamp(24px, 4vw, 56px) 16px;
+    background: transparent;
+    position: static;
+  }
+  .header__back {
+    display: none;
+  }
+  .header__spacer--left,
+  .header__spacer--right {
+    display: none;
+  }
+  .header__title {
+    text-align: left;
+    font-size: clamp(22px, 1vw + 18px, 28px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  ::slotted([slot='action']) {
+    justify-self: end;
+  }
+}

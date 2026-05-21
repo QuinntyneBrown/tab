@@ -1,0 +1,12 @@
+/* tab — global app styles
+ *
+ * Tokens and base layout live inside the components library so a single source
+ * is shared between primitives (shadow-DOM hosts) and the app shell.
+ */
+
+@use '../../components/src/lib/tokens' as tokens;
+@use '../../components/src/lib/base';
+
+:root {
+  @include tokens.tab-tokens;
+}
