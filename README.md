@@ -136,6 +136,7 @@ Acceptance specs should live under `e2e/tests` and include their traced L2 requi
 - [Backend implementation plan](docs/plans/backend.md)
 - [Component library design](docs/components/README.md)
 - [Static UI mocks](docs/mocks/README.md)
+- [Glossary](docs/glossary.md)
 
 ## Architecture Principles
 
