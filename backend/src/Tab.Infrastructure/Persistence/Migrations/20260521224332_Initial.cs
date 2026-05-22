@@ -54,7 +54,6 @@ namespace Tab.Infrastructure.Persistence.Migrations
                     CurrencyCode = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
                     DefaultSplitPercent = table.Column<int>(type: "int", nullable: false),
                     ReminderDays = table.Column<int>(type: "int", nullable: false),
-                    StatementTone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     UpdatedUtc = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
                 },
                 constraints: table =>

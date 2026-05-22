@@ -1,7 +1,9 @@
+import { Dialog } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { LOANS_SERVICE, LedgerEntry, LedgerEntryType } from 'api';
+import { LOANS_SERVICE, LedgerEntry, LedgerEntryType, PAYMENTS_SERVICE } from 'api';
 import {
+  AddEntryDialogResult,
   AmountComponent,
   AppShellComponent,
   AvatarComponent,
@@ -11,6 +13,7 @@ import {
   RowComponent,
   SegmentedComponent,
   TabSegment,
+  openAddEntryDialog,
 } from 'components';
 
 type Filter = 'all' | LedgerEntryType;
@@ -41,7 +44,10 @@ interface MonthGroup {
 })
 export class LoansPage {
   private readonly router = inject(Router);
-  readonly ledger = inject(LOANS_SERVICE).list();
+  private readonly dialog = inject(Dialog);
+  private readonly loans = inject(LOANS_SERVICE);
+  private readonly payments = inject(PAYMENTS_SERVICE);
+  readonly ledger = this.loans.list();
 
   readonly filter = signal<Filter>('all');
   readonly segments: TabSegment[] = [
@@ -97,6 +103,30 @@ export class LoansPage {
 
   openEntry(entry: LedgerEntry): void {
     if (entry.type === 'loan') this.router.navigate(['/loans', entry.id, 'edit']);
+  }
+
+  async openAddEntry(mode: 'loan' | 'bill'): Promise<void> {
+    const result = await openAddEntryDialog(this.dialog, {
+      mode,
+      submit: async (entry: AddEntryDialogResult) => {
+        if (entry.mode === 'payment') {
+          await this.payments.create({
+            amount: entry.amount,
+            date: entry.date,
+            method: entry.method,
+          });
+        } else {
+          await this.loans.create({
+            amount: entry.amount,
+            description: entry.description,
+            date: entry.date,
+            method: entry.method,
+            note: entry.note,
+          });
+        }
+      },
+    });
+    if (result) this.ledger.reload();
   }
 }
 

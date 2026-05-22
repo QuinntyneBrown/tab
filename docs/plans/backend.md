@@ -83,7 +83,7 @@ Each phase ends with a verifiable exit criterion. Don't move on until the criter
   - `RecurringBill` (Id, UserId, CounterpartyId, Name, Vendor, ExpectedAmount, DueDay, SplitPercent, ArchivedUtc?, CreatedUtc)
   - `BillPosting` (Id, UserId, CounterpartyId, RecurringBillId, Period (YYYY-MM), TotalAmount, ShareAmount, Date, CreatedUtc)
   - `PaymentIn` (Id, UserId, CounterpartyId, Amount, Date, Method, Note, CreatedUtc)
-  - `Preferences` (UserId PK, CurrencyCode, DefaultSplitPercent, ReminderDays, StatementTone, UpdatedUtc)
+  - `Preferences` (UserId PK, CurrencyCode, DefaultSplitPercent, ReminderDays, UpdatedUtc)
   - `RefreshToken` (Id, UserId, TokenHash, IssuedUtc, ExpiresUtc, RevokedUtc?, ReplacedById?)
   - `StatementShare` (Id, UserId, FromDate, ToDate, TokenHash, ExpiresUtc, CreatedUtc)
 - In `Tab.Application/Abstractions`, define `ITabDbContext` exposing each `DbSet<T>` as a property + `Task<int> SaveChangesAsync(CancellationToken)`.

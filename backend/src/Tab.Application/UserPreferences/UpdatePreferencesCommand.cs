@@ -6,5 +6,4 @@ namespace Tab.Application.UserPreferences;
 public record UpdatePreferencesCommand(
     string CurrencyCode,
     int DefaultSplitPercent,
-    int ReminderDays,
-    string StatementTone) : IRequest<PreferencesResponse>;
+    int ReminderDays) : IRequest<PreferencesResponse>;

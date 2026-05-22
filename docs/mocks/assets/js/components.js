@@ -558,6 +558,8 @@ class TabNav extends HTMLElement {
     const items = [
       { key: 'dashboard', label: 'Home', href: 'dashboard.html',
         icon: '<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>' },
+      { key: 'calendar', label: 'Calendar', href: 'calendar.html',
+        icon: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M8 3v4M16 3v4"/>' },
       { key: 'loans', label: 'Loans', href: 'loans.html',
         icon: '<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/>' },
       { key: 'bills', label: 'Bills', href: 'bills.html',

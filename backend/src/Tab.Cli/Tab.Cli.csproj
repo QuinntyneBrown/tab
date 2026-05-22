@@ -3,9 +3,18 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <RootNamespace>Tab.Cli</RootNamespace>
-    <AssemblyName>tab</AssemblyName>
+    <AssemblyName>tab-cli</AssemblyName>
     <UserSecretsId>tab-cli-dev-secrets</UserSecretsId>
     <NoWarn>$(NoWarn);CA1062</NoWarn>
+
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>tab-cli</ToolCommandName>
+    <PackageId>Tab.Cli</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Tab</Authors>
+    <Description>Tab administrative CLI (db migrate, users seed, ...).</Description>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)..\..\..\artifacts\nupkg</PackageOutputPath>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,9 +38,13 @@
   <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Pack>true</Pack>
+      <PackagePath>tools/$(TargetFramework)/any/</PackagePath>
     </None>
     <None Update="appsettings.E2E.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Pack>true</Pack>
+      <PackagePath>tools/$(TargetFramework)/any/</PackagePath>
     </None>
   </ItemGroup>
 

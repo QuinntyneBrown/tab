@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#2E2E30" />
+  <title>tab — calendar</title>
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <script src="assets/js/components.js" defer></script>
+  <style>
+    .lede {
+      color: var(--c-muted);
+      font-size: clamp(13px, 0.4vw + 12px, 15px);
+      line-height: 1.55;
+      margin: var(--s-3) 0 var(--s-5);
+      max-width: 60ch;
+    }
+
+    /* ---------- Toolbar ---------- */
+    .cal-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--s-3);
+      margin-bottom: var(--s-4);
+      flex-wrap: wrap;
+    }
+    .cal-nav { display: flex; align-items: center; gap: var(--s-2); }
+    .cal-nav .month-label {
+      font-size: var(--fs-lg);
+      font-weight: 600;
+      color: var(--c-text-strong);
+      letter-spacing: -0.01em;
+      min-width: 11ch;
+      text-align: center;
+    }
+    .cal-views { display: flex; align-items: center; gap: var(--s-2); }
+    .iconbtn {
+      width: 36px; height: 36px;
+      display: inline-flex; align-items: center; justify-content: center;
+      border-radius: var(--r-md);
+      border: 1px solid var(--c-hairline-strong);
+      background: var(--c-surface);
+      color: var(--c-text);
+      cursor: pointer;
+      transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+    }
+    .iconbtn:hover { background: var(--c-elevated); border-color: var(--c-focus); }
+    .iconbtn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; }
+
+    .seg {
+      display: inline-flex;
+      background: var(--c-surface);
+      border: 1px solid var(--c-hairline-strong);
+      border-radius: var(--r-md);
+      padding: 2px;
+    }
+    .seg button {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--c-muted);
+      padding: 6px 12px;
+      font: 500 13px var(--font-sans);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .seg button.active {
+      background: var(--c-elevated);
+      color: var(--c-text-strong);
+    }
+
+    /* ---------- Grid ---------- */
+    .weekrow {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 1px;
+      color: var(--c-muted);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: var(--s-2);
+    }
+    .weekrow span { padding: var(--s-2) var(--s-3); text-align: left; }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 1px;
+      background: var(--c-hairline-strong);
+      border: 1px solid var(--c-hairline-strong);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+    }
+    .cell {
+      background: var(--c-bg);
+      min-height: 120px;
+      padding: var(--s-3);
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+      position: relative;
+      min-width: 0;
+    }
+    @media (min-width: 1200px) { .cell { min-height: 140px; } }
+    @media (max-width: 767px)  { .cell { min-height: 96px;  padding: var(--s-2); } }
+
+    .cell.out { background: color-mix(in srgb, var(--c-bg) 92%, #000 8%); }
+    .cell.out .num { color: var(--c-text-faint); }
+
+    .cell .num {
+      font: 500 13px var(--font-num);
+      color: var(--c-text);
+    }
+    .cell.today .num {
+      color: var(--c-text-strong);
+      background: var(--c-elevated);
+      border-radius: var(--r-pill);
+      width: 26px; height: 26px;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-weight: 700;
+      box-shadow: 0 0 0 1px var(--c-focus);
+    }
+
+    /* ---------- Chips ---------- */
+    .chips { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    .chip {
+      appearance: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border-radius: var(--r-sm);
+      font: 500 12px var(--font-sans);
+      color: var(--c-text-strong);
+      background: var(--c-surface);
+      border: 0;
+      border-left: 3px solid transparent;
+      text-align: left;
+      cursor: pointer;
+      min-width: 0;
+      width: 100%;
+    }
+    .chip .amt {
+      font: 600 13px var(--font-num);
+      color: var(--c-text-strong);
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      margin-left: auto;
+    }
+    /* Label is only used in the mobile agenda fallback — grid chips are amount-only */
+    .chip .label {
+      flex: 1; min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .chip--loan    { border-left-color: #6FA8C9; }
+    .chip--bill    { border-left-color: #C9A66F; }
+    .chip--payment { border-left-color: #7FB07A; }
+    .chip--payment .amt { color: var(--c-muted); }
+    .chip--payment .label { color: var(--c-muted); }
+
+    .chip--projected {
+      background: transparent;
+      border: 1px dashed color-mix(in srgb, #C9A66F 60%, transparent);
+      border-left-width: 3px;
+      border-left-style: dashed;
+      border-left-color: #C9A66F;
+      color: var(--c-muted);
+    }
+    .chip--projected .amt { color: var(--c-text); font-weight: 500; }
+
+    .more {
+      appearance: none;
+      align-self: flex-start;
+      font: 500 11px var(--font-sans);
+      color: var(--c-muted);
+      background: transparent;
+      border: 0;
+      padding: 2px 6px;
+      border-radius: var(--r-sm);
+      cursor: pointer;
+    }
+    .more:hover { background: var(--c-elevated); color: var(--c-text); }
+
+    /* ---------- Legend ---------- */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-4);
+      margin-top: var(--s-5);
+      padding: var(--s-3) var(--s-4);
+      background: var(--c-surface);
+      border: 1px solid var(--c-hairline);
+      border-radius: var(--r-md);
+      color: var(--c-muted);
+      font-size: 12px;
+    }
+    .legend .item { display: inline-flex; align-items: center; gap: 8px; }
+    .swatch {
+      width: 12px; height: 12px; border-radius: 3px;
+      border-left: 3px solid var(--c-muted);
+      background: var(--c-elevated);
+    }
+    .swatch.loan    { border-left-color: #6FA8C9; }
+    .swatch.bill    { border-left-color: #C9A66F; }
+    .swatch.payment { border-left-color: #7FB07A; }
+    .swatch.projected {
+      background: transparent;
+      border: 1px dashed color-mix(in srgb, #C9A66F 60%, transparent);
+      border-left: 3px dashed #C9A66F;
+    }
+
+    /* ---------- Agenda fallback (mobile) ---------- */
+    .agenda { display: none; }
+    @media (max-width: 575px) {
+      .weekrow, .cal-grid { display: none; }
+      .agenda { display: flex; flex-direction: column; gap: var(--s-3); }
+      .agenda h3 {
+        position: sticky; top: 0;
+        background: var(--c-bg);
+        margin: 0; padding: var(--s-2) 0;
+        font: 600 13px var(--font-sans);
+        color: var(--c-muted);
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+      .agenda .day { display: flex; flex-direction: column; gap: 6px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <tab-header title="Calendar" back href="dashboard.html">
+      <tab-button slot="action" variant="quiet" size="sm">＋ Add</tab-button>
+    </tab-header>
+
+    <main>
+      <p class="lede">
+        Everything on one calendar — loans you've issued, payments Ray has sent
+        back, and recurring bills (already paid or coming up).
+      </p>
+
+      <div class="cal-toolbar">
+        <div class="cal-nav">
+          <button class="iconbtn" aria-label="Previous month">
+            <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
+          </button>
+          <span class="month-label">May 2026</span>
+          <button class="iconbtn" aria-label="Next month">
+            <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+          </button>
+          <tab-button variant="ghost" size="sm" style="margin-left:8px">Today</tab-button>
+        </div>
+        <div class="cal-views">
+          <div class="seg" role="tablist" aria-label="View">
+            <button class="active" role="tab" aria-selected="true">Month</button>
+            <button role="tab" aria-selected="false"
+              onclick="location.href='calendar-agenda.html'">Agenda</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="weekrow" aria-hidden="true">
+        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span>
+        <span>Thu</span><span>Fri</span><span>Sat</span>
+      </div>
+
+      <div class="cal-grid" role="grid" aria-label="May 2026">
+        <!-- Week 1 -->
+        <div class="cell out" role="gridcell"><span class="num">26</span></div>
+        <div class="cell out" role="gridcell"><span class="num">27</span></div>
+        <div class="cell out" role="gridcell"><span class="num">28</span></div>
+        <div class="cell out" role="gridcell"><span class="num">29</span></div>
+        <div class="cell out" role="gridcell"><span class="num">30</span></div>
+        <div class="cell" role="gridcell"><span class="num">1</span></div>
+        <div class="cell" role="gridcell"><span class="num">2</span></div>
+
+        <!-- Week 2 -->
+        <div class="cell" role="gridcell">
+          <span class="num">3</span>
+          <div class="chips">
+            <button class="chip chip--bill" type="button"
+              title="Streaming bundle — bill split · $16.00"
+              aria-label="Bill split, Streaming bundle, $16.00">
+              <span class="amt">$16.00</span>
+            </button>
+          </div>
+        </div>
+        <div class="cell" role="gridcell"><span class="num">4</span></div>
+        <div class="cell" role="gridcell">
+          <span class="num">5</span>
+          <div class="chips">
+            <button class="chip chip--loan" type="button"
+              title="Groceries — loan · $120.00"
+              aria-label="Loan, Groceries, $120.00">
+              <span class="amt">$120.00</span>
+            </button>
+          </div>
+        </div>
+        <div class="cell" role="gridcell"><span class="num">6</span></div>
+        <div class="cell" role="gridcell"><span class="num">7</span></div>
+        <div class="cell" role="gridcell">
+          <span class="num">8</span>
+          <div class="chips">
+            <button class="chip chip--payment" type="button"
+              title="Payment from Ray — $100.00"
+              aria-label="Payment in from Ray, $100.00">
+              <span class="amt">−$100.00</span>
+            </button>
+          </div>
+        </div>
+        <div class="cell" role="gridcell"><span class="num">9</span></div>
+
+        <!-- Week 3 -->
+        <div class="cell" role="gridcell"><span class="num">10</span></div>
+        <div class="cell" role="gridcell"><span class="num">11</span></div>
+        <div class="cell" role="gridcell">
+          <span class="num">12</span>
+          <div class="chips">
+            <button class="chip chip--bill" type="button"
+              title="Internet — bill split · $40.50"
+              aria-label="Bill split, Internet, $40.50">
+              <span class="amt">$40.50</span>
+            </button>
+          </div>
+        </div>
+        <div class="cell" role="gridcell"><span class="num">13</span></div>
+        <div class="cell" role="gridcell">
+          <span class="num">14</span>
+          <div class="chips">
+            <button class="chip chip--loan" type="button"
+              title="Pharmacy — loan · $42.10"
+              aria-label="Loan, Pharmacy, $42.10">
+              <span class="amt">$42.10</span>
+            </button>
+          </div>
+        </div>
+        <div class="cell" role="gridcell">
+          <span class="num">15</span>
+          <div class="chips">
+            <button class="chip chip--loan" type="button"
+              title="Groceries — loan · $58.20"
+              aria-label="Loan, Groceries, $58.20">
+              <span class="amt">$58.20</span>
+            </button>
+            <button class="chip chip--loan" type="button"
+              title="Gas — loan · $48.00"
+              aria-label="Loan, Gas, $48.00">
+              <span class="amt">$48.00</span>
+            </button>
+            <button class="chip chip--bill" type="button"
+              title="Heat — bill split · $31.00"
+              aria-label="Bill split, Heat, $31.00">
+              <span class="amt">$31.00</span>
+            </button>
+            <button class="more" type="button" aria-label="Show one more entry on May 15">+1 more</button>
+          </div>
+        </div>
+        <div class="cell" role="gridcell"><span class="num">16</span></div>
+
+        <!-- Week 4 -->
+        <div class="cell" role="gridcell"><span class="num">17</span></div>
+        <div class="cell" role="gridcell">
+          <span class="num">18</span>
+          <div class="chips">
+            <button class="chip chip--bill" type="button"
+              title="Hydro — bill split · $84.00"
+              aria-label="Bill split, Hydro, $84.00">
+              <span class="amt">$84.00</span>
+            </button>
+          </div>
+        </div>
+        <div class="cell" role="gridcell"><span class="num">19</span></div>
+        <div class="cell" role="gridcell"><span class="num">20</span></div>
+        <div class="cell" role="gridcell"><span class="num">21</span></div>
+        <div class="cell today" role="gridcell" aria-current="date">
+          <span class="num">22</span>
+          <div class="chips">
+            <button class="chip chip--loan" type="button"
+              title="Lunch — loan · $28.40"
+              aria-label="Loan, Lunch, $28.40">
+              <span class="amt">$28.40</span>
+            </button>
+          </div>
+        </div>
+        <div class="cell" role="gridcell"><span class="num">23</span></div>
+
+        <!-- Week 5 -->
+        <div class="cell" role="gridcell"><span class="num">24</span></div>
+        <div class="cell" role="gridcell"><span class="num">25</span></div>
+        <div class="cell" role="gridcell"><span class="num">26</span></div>
+        <div class="cell" role="gridcell"><span class="num">27</span></div>
+        <div class="cell" role="gridcell">
+          <span class="num">28</span>
+          <div class="chips">
+            <button class="chip chip--projected" type="button"
+              title="Phone plan — projected bill split · $27.50 · not yet posted"
+              aria-label="Projected bill, Phone plan, $27.50, not yet posted">
+              <span class="amt">$27.50</span>
+            </button>
+          </div>
+        </div>
+        <div class="cell" role="gridcell"><span class="num">29</span></div>
+        <div class="cell" role="gridcell"><span class="num">30</span></div>
+
+        <!-- Week 6 -->
+        <div class="cell" role="gridcell"><span class="num">31</span></div>
+        <div class="cell out" role="gridcell"><span class="num">1</span></div>
+        <div class="cell out" role="gridcell"><span class="num">2</span></div>
+        <div class="cell out" role="gridcell">
+          <span class="num">3</span>
+          <div class="chips">
+            <button class="chip chip--projected" type="button"
+              title="Internet — projected bill split · $40.50 · not yet posted"
+              aria-label="Projected bill, Internet, $40.50, not yet posted">
+              <span class="amt">$40.50</span>
+            </button>
+          </div>
+        </div>
+        <div class="cell out" role="gridcell"><span class="num">4</span></div>
+        <div class="cell out" role="gridcell">
+          <span class="num">5</span>
+          <div class="chips">
+            <button class="chip chip--projected" type="button"
+              title="Streaming bundle — projected bill split · $16.00 · not yet posted"
+              aria-label="Projected bill, Streaming bundle, $16.00, not yet posted">
+              <span class="amt">$16.00</span>
+            </button>
+          </div>
+        </div>
+        <div class="cell out" role="gridcell"><span class="num">6</span></div>
+      </div>
+
+      <!-- Mobile agenda fallback (XS) -->
+      <div class="agenda" aria-label="Agenda for May 2026">
+        <div class="day">
+          <h3>Fri · May 3</h3>
+          <button class="chip chip--bill" type="button">
+            <span class="label">Streaming bundle</span><span class="amt">$16.00</span>
+          </button>
+        </div>
+        <div class="day">
+          <h3>Sun · May 5</h3>
+          <button class="chip chip--loan" type="button">
+            <span class="label">Groceries</span><span class="amt">$120.00</span>
+          </button>
+        </div>
+        <div class="day">
+          <h3>Wed · May 8</h3>
+          <button class="chip chip--payment" type="button">
+            <span class="label">Payment · Ray</span><span class="amt">−$100.00</span>
+          </button>
+        </div>
+        <div class="day">
+          <h3>Thu · May 22 · Today</h3>
+          <button class="chip chip--loan" type="button">
+            <span class="label">Lunch</span><span class="amt">$28.40</span>
+          </button>
+        </div>
+        <div class="day">
+          <h3>Fri · May 28 · Projected</h3>
+          <button class="chip chip--projected" type="button">
+            <span class="label">Phone plan</span><span class="amt">$27.50</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="legend" aria-label="Legend">
+        <div class="item"><span class="swatch loan"></span> Loan</div>
+        <div class="item"><span class="swatch bill"></span> Bill (posted)</div>
+        <div class="item"><span class="swatch projected"></span> Bill (projected)</div>
+        <div class="item"><span class="swatch payment"></span> Payment in</div>
+      </div>
+    </main>
+
+    <tab-nav active="calendar"></tab-nav>
+  </div>
+</body>
+</html>

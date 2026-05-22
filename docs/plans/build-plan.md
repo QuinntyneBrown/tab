@@ -478,7 +478,6 @@ Frontend tab app:
   - Currency selector (`<tab-input type="select">` or native `<select>` — keep simple).
   - Default split `<tab-input type="number">` 1–99.
   - Reminder lead time `<tab-input type="number">` 1–14.
-  - Statement tone radio (only "Neutral" in MVP — render disabled with hint).
   - Export button (Task 20).
   - Sign-out button (Task 6).
 

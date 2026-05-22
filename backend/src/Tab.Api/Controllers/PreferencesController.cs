@@ -24,5 +24,5 @@ public class PreferencesController : ControllerBase
 
     [HttpPut]
     public async Task<ActionResult<PreferencesResponse>> Update([FromBody] UpdatePreferencesRequest body, CancellationToken ct)
-        => Ok(await _mediator.Send(new UpdatePreferencesCommand(body.CurrencyCode, body.DefaultSplitPercent, body.ReminderDays, body.StatementTone), ct));
+        => Ok(await _mediator.Send(new UpdatePreferencesCommand(body.CurrencyCode, body.DefaultSplitPercent, body.ReminderDays), ct));
 }

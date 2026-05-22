@@ -49,24 +49,6 @@
             (valueChange)="reminderLead.set($event)"
           ></tab-input>
 
-          <fieldset class="settings__tone">
-            <legend>Statement tone</legend>
-            <label>
-              <input
-                type="radio"
-                name="statement-tone"
-                value="Neutral"
-                checked
-                aria-label="Statement tone"
-              />
-              <span>Neutral</span>
-            </label>
-            <label class="disabled">
-              <input type="radio" name="statement-tone" value="Warm" disabled />
-              <span>Warm (coming soon)</span>
-            </label>
-          </fieldset>
-
           @if (preferencesError(); as message) {
             <p class="settings__error" role="alert">{{ message }}</p>
           }

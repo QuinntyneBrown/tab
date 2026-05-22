@@ -25,8 +25,7 @@ public class GetPreferencesQueryHandler : IRequestHandler<GetPreferencesQuery, P
         {
             CurrencyCode = p.CurrencyCode,
             DefaultSplitPercent = p.DefaultSplitPercent,
-            ReminderDays = p.ReminderDays,
-            StatementTone = p.StatementTone
+            ReminderDays = p.ReminderDays
         };
     }
 }

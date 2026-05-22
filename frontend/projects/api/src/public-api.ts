@@ -96,7 +96,6 @@ export { PREFERENCES_SERVICE } from './lib/preferences/preferences-service.token
 export { providePreferencesService } from './lib/preferences/provide-preferences-service';
 export type { IPreferencesService } from './lib/preferences/preferences-service.interface';
 export type { Preferences } from './lib/preferences/preferences.interface';
-export type { StatementTone } from './lib/preferences/statement-tone.type';
 export type { UpdatePreferencesRequest } from './lib/preferences/update-preferences-request.interface';
 
 // Export

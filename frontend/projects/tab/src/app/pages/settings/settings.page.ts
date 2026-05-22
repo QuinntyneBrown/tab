@@ -90,7 +90,6 @@ export class SettingsPage {
         currency: this.currency(),
         defaultSplitPercent: Number(this.defaultSplit()),
         reminderLeadDays: Number(this.reminderLead()),
-        statementTone: 'Neutral',
       });
       this.preferences.reload();
       this.preferencesError.set(null);

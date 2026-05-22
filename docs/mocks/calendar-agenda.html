@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#2E2E30" />
+  <title>tab — calendar (agenda)</title>
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <script src="assets/js/components.js" defer></script>
+  <style>
+    .lede {
+      color: var(--c-muted);
+      font-size: clamp(13px, 0.4vw + 12px, 15px);
+      line-height: 1.55;
+      margin: var(--s-3) 0 var(--s-5);
+      max-width: 60ch;
+    }
+
+    /* ---------- Toolbar (same as month view) ---------- */
+    .cal-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--s-3);
+      margin-bottom: var(--s-4);
+      flex-wrap: wrap;
+    }
+    .cal-nav { display: flex; align-items: center; gap: var(--s-2); }
+    .cal-nav .month-label {
+      font-size: var(--fs-lg);
+      font-weight: 600;
+      color: var(--c-text-strong);
+      letter-spacing: -0.01em;
+      min-width: 11ch;
+      text-align: center;
+    }
+    .cal-views { display: flex; align-items: center; gap: var(--s-2); }
+    .iconbtn {
+      width: 36px; height: 36px;
+      display: inline-flex; align-items: center; justify-content: center;
+      border-radius: var(--r-md);
+      border: 1px solid var(--c-hairline-strong);
+      background: var(--c-surface);
+      color: var(--c-text);
+      cursor: pointer;
+    }
+    .iconbtn:hover { background: var(--c-elevated); border-color: var(--c-focus); }
+    .iconbtn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; }
+
+    .seg {
+      display: inline-flex;
+      background: var(--c-surface);
+      border: 1px solid var(--c-hairline-strong);
+      border-radius: var(--r-md);
+      padding: 2px;
+    }
+    .seg button {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--c-muted);
+      padding: 6px 12px;
+      font: 500 13px var(--font-sans);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .seg button.active {
+      background: var(--c-elevated);
+      color: var(--c-text-strong);
+    }
+
+    /* ---------- Filter strip (agenda-specific) ---------- */
+    .filters {
+      display: flex;
+      gap: var(--s-2);
+      margin-bottom: var(--s-4);
+      flex-wrap: wrap;
+    }
+    .chiprow {
+      appearance: none;
+      border: 1px solid var(--c-hairline-strong);
+      background: var(--c-surface);
+      color: var(--c-text);
+      font: 500 12px var(--font-sans);
+      padding: 6px 12px;
+      border-radius: var(--r-pill);
+      cursor: pointer;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .chiprow.on {
+      background: var(--c-elevated);
+      color: var(--c-text-strong);
+      border-color: var(--c-focus);
+    }
+    .chiprow .dot {
+      width: 8px; height: 8px; border-radius: 50%; display: inline-block;
+    }
+    .dot.loan    { background: #6FA8C9; }
+    .dot.bill    { background: #C9A66F; }
+    .dot.payment { background: #7FB07A; }
+
+    /* ---------- Agenda list ---------- */
+    .agenda {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-6);
+    }
+    .day {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: var(--s-4);
+      align-items: start;
+    }
+    @media (max-width: 575px) {
+      .day {
+        grid-template-columns: 1fr;
+        gap: var(--s-2);
+      }
+    }
+
+    .day-head {
+      position: sticky; top: 0;
+      padding-top: 2px;
+      display: flex; flex-direction: column;
+      align-self: start;
+    }
+    .day-head .dow {
+      font: 600 11px var(--font-sans);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--c-muted);
+    }
+    .day-head .dnum {
+      font: 700 28px var(--font-num);
+      color: var(--c-text-strong);
+      line-height: 1;
+      margin-top: 2px;
+    }
+    .day-head .mon {
+      font: 500 12px var(--font-sans);
+      color: var(--c-muted);
+      margin-top: 2px;
+    }
+    .day-head .badge {
+      margin-top: 6px;
+      align-self: flex-start;
+      font: 600 10px var(--font-sans);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: var(--r-pill);
+      background: var(--c-elevated);
+      color: var(--c-text-strong);
+    }
+    .day-head .badge.projected {
+      background: transparent;
+      border: 1px dashed color-mix(in srgb, #C9A66F 60%, transparent);
+      color: var(--c-muted);
+    }
+    .day.today .day-head .dnum {
+      color: #fff;
+    }
+    .day.today .day-head::before {
+      content: "";
+      position: absolute;
+      left: -10px;
+      top: 16px;
+      width: 4px; height: 28px;
+      background: var(--c-text-strong);
+      border-radius: var(--r-pill);
+    }
+    .day-head { position: relative; }
+
+    .day-body {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    /* ---------- Chip rows ---------- */
+    .row-entry {
+      appearance: none;
+      display: grid;
+      grid-template-columns: 8px 1fr auto;
+      gap: var(--s-3);
+      align-items: center;
+      padding: var(--s-3) var(--s-4);
+      border-radius: var(--r-md);
+      border: 1px solid var(--c-hairline);
+      background: var(--c-surface);
+      color: var(--c-text-strong);
+      cursor: pointer;
+      text-align: left;
+      width: 100%;
+      min-width: 0;
+      transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+    }
+    .row-entry:hover {
+      background: var(--c-elevated);
+      border-color: var(--c-hairline-strong);
+    }
+    .row-entry .stripe {
+      width: 4px; height: 28px;
+      border-radius: var(--r-pill);
+      background: var(--c-muted);
+    }
+    .row-entry.loan    .stripe { background: #6FA8C9; }
+    .row-entry.bill    .stripe { background: #C9A66F; }
+    .row-entry.payment .stripe { background: #7FB07A; }
+    .row-entry.projected {
+      border-style: dashed;
+      background: transparent;
+    }
+    .row-entry.projected .stripe {
+      background: transparent;
+      border: 2px dashed #C9A66F;
+      width: 4px; height: 28px;
+    }
+    .row-entry .main { min-width: 0; display: flex; flex-direction: column; }
+    .row-entry .title {
+      font: 600 14px var(--font-sans);
+      color: var(--c-text-strong);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .row-entry.projected .title { color: var(--c-text); }
+    .row-entry .meta {
+      font: 500 12px var(--font-sans);
+      color: var(--c-muted);
+      margin-top: 2px;
+    }
+    .row-entry .meta .pill {
+      display: inline-block;
+      padding: 1px 8px;
+      border-radius: var(--r-pill);
+      background: var(--c-elevated);
+      color: var(--c-text);
+      margin-right: 6px;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+    }
+    .row-entry.projected .meta .pill {
+      background: transparent;
+      border: 1px dashed color-mix(in srgb, #C9A66F 60%, transparent);
+      color: var(--c-muted);
+    }
+    .row-entry .amount {
+      font: 600 16px var(--font-num);
+      color: var(--c-text-strong);
+      white-space: nowrap;
+    }
+    .row-entry.payment .amount { color: var(--c-muted); }
+    .row-entry.projected .amount { color: var(--c-text); font-weight: 500; }
+
+    /* ---------- Legend (same as month) ---------- */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-4);
+      margin-top: var(--s-6);
+      padding: var(--s-3) var(--s-4);
+      background: var(--c-surface);
+      border: 1px solid var(--c-hairline);
+      border-radius: var(--r-md);
+      color: var(--c-muted);
+      font-size: 12px;
+    }
+    .legend .item { display: inline-flex; align-items: center; gap: 8px; }
+    .swatch {
+      width: 12px; height: 12px; border-radius: 3px;
+      border-left: 3px solid var(--c-muted);
+      background: var(--c-elevated);
+    }
+    .swatch.loan    { border-left-color: #6FA8C9; }
+    .swatch.bill    { border-left-color: #C9A66F; }
+    .swatch.payment { border-left-color: #7FB07A; }
+    .swatch.projected {
+      background: transparent;
+      border: 1px dashed color-mix(in srgb, #C9A66F 60%, transparent);
+      border-left-width: 3px;
+      border-left-style: dashed;
+      border-left-color: #C9A66F;
+    }
+
+    /* ---------- Summary strip per month ---------- */
+    .month-strip {
+      display: flex;
+      gap: var(--s-5);
+      flex-wrap: wrap;
+      padding: var(--s-3) var(--s-4);
+      margin-bottom: var(--s-5);
+      border: 1px solid var(--c-hairline);
+      border-radius: var(--r-md);
+      background: var(--c-surface);
+      color: var(--c-muted);
+      font-size: 12px;
+    }
+    .month-strip .stat { display: flex; flex-direction: column; min-width: 80px; }
+    .month-strip .stat .v {
+      font: 600 16px var(--font-num);
+      color: var(--c-text-strong);
+      margin-top: 2px;
+    }
+    .month-strip .stat .v.neg { color: var(--c-muted); }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <tab-header title="Calendar" back href="dashboard.html">
+      <tab-button slot="action" variant="quiet" size="sm">＋ Add</tab-button>
+    </tab-header>
+
+    <main>
+      <p class="lede">
+        Every entry, in order. Past loans and payments, today, and the next
+        recurring bills you can expect to post.
+      </p>
+
+      <div class="cal-toolbar">
+        <div class="cal-nav">
+          <button class="iconbtn" aria-label="Previous month">
+            <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
+          </button>
+          <span class="month-label">May 2026</span>
+          <button class="iconbtn" aria-label="Next month">
+            <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+          </button>
+          <tab-button variant="ghost" size="sm" style="margin-left:8px">Today</tab-button>
+        </div>
+        <div class="cal-views">
+          <div class="seg" role="tablist" aria-label="View">
+            <button role="tab" aria-selected="false"
+              onclick="location.href='calendar.html'">Month</button>
+            <button class="active" role="tab" aria-selected="true">Agenda</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="month-strip" aria-label="May 2026 summary">
+        <div class="stat"><span>Lent</span><span class="v">$338.70</span></div>
+        <div class="stat"><span>Bills (their half)</span><span class="v">$140.50</span></div>
+        <div class="stat"><span>Paid back</span><span class="v neg">−$100.00</span></div>
+        <div class="stat"><span>Net change</span><span class="v">+$379.20</span></div>
+      </div>
+
+      <div class="filters" role="toolbar" aria-label="Filter entries">
+        <button class="chiprow on">All</button>
+        <button class="chiprow"><span class="dot loan"></span>Loans</button>
+        <button class="chiprow"><span class="dot bill"></span>Bills</button>
+        <button class="chiprow"><span class="dot payment"></span>Payments</button>
+      </div>
+
+      <div class="agenda">
+
+        <!-- May 3 -->
+        <div class="day">
+          <div class="day-head">
+            <span class="dow">Fri</span>
+            <span class="dnum">3</span>
+            <span class="mon">May</span>
+          </div>
+          <div class="day-body">
+            <button class="row-entry bill" type="button">
+              <span class="stripe"></span>
+              <span class="main">
+                <span class="title">Streaming bundle</span>
+                <span class="meta"><span class="pill">Bill split</span>Netflix + Spotify · 50%</span>
+              </span>
+              <span class="amount">$16.00</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- May 5 -->
+        <div class="day">
+          <div class="day-head">
+            <span class="dow">Sun</span>
+            <span class="dnum">5</span>
+            <span class="mon">May</span>
+          </div>
+          <div class="day-body">
+            <button class="row-entry loan" type="button">
+              <span class="stripe"></span>
+              <span class="main">
+                <span class="title">Groceries</span>
+                <span class="meta"><span class="pill">Loan</span>Cash</span>
+              </span>
+              <span class="amount">$120.00</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- May 8 -->
+        <div class="day">
+          <div class="day-head">
+            <span class="dow">Wed</span>
+            <span class="dnum">8</span>
+            <span class="mon">May</span>
+          </div>
+          <div class="day-body">
+            <button class="row-entry payment" type="button">
+              <span class="stripe"></span>
+              <span class="main">
+                <span class="title">Payment from Ray</span>
+                <span class="meta"><span class="pill">Payment in</span>e-Transfer</span>
+              </span>
+              <span class="amount">−$100.00</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- May 12 -->
+        <div class="day">
+          <div class="day-head">
+            <span class="dow">Tue</span>
+            <span class="dnum">12</span>
+            <span class="mon">May</span>
+          </div>
+          <div class="day-body">
+            <button class="row-entry bill" type="button">
+              <span class="stripe"></span>
+              <span class="main">
+                <span class="title">Internet</span>
+                <span class="meta"><span class="pill">Bill split</span>Bell · 50%</span>
+              </span>
+              <span class="amount">$40.50</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- May 14 -->
+        <div class="day">
+          <div class="day-head">
+            <span class="dow">Thu</span>
+            <span class="dnum">14</span>
+            <span class="mon">May</span>
+          </div>
+          <div class="day-body">
+            <button class="row-entry loan" type="button">
+              <span class="stripe"></span>
+              <span class="main">
+                <span class="title">Pharmacy</span>
+                <span class="meta"><span class="pill">Loan</span>Debit</span>
+              </span>
+              <span class="amount">$42.10</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- May 15 -->
+        <div class="day">
+          <div class="day-head">
+            <span class="dow">Fri</span>
+            <span class="dnum">15</span>
+            <span class="mon">May</span>
+          </div>
+          <div class="day-body">
+            <button class="row-entry loan" type="button">
+              <span class="stripe"></span>
+              <span class="main">
+                <span class="title">Groceries</span>
+                <span class="meta"><span class="pill">Loan</span>Cash</span>
+              </span>
+              <span class="amount">$58.20</span>
+            </button>
+            <button class="row-entry loan" type="button">
+              <span class="stripe"></span>
+              <span class="main">
+                <span class="title">Gas</span>
+                <span class="meta"><span class="pill">Loan</span>Card</span>
+              </span>
+              <span class="amount">$48.00</span>
+            </button>
+            <button class="row-entry bill" type="button">
+              <span class="stripe"></span>
+              <span class="main">
+                <span class="title">Heat</span>
+                <span class="meta"><span class="pill">Bill split</span>Enbridge · 50%</span>
+              </span>
+              <span class="amount">$31.00</span>
+            </button>
+            <button class="row-entry loan" type="button">
+              <span class="stripe"></span>
+              <span class="main">
+                <span class="title">Coffee run</span>
+                <span class="meta"><span class="pill">Loan</span>Card</span>
+              </span>
+              <span class="amount">$11.00</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- May 18 -->
+        <div class="day">
+          <div class="day-head">
+            <span class="dow">Mon</span>
+            <span class="dnum">18</span>
+            <span class="mon">May</span>
+          </div>
+          <div class="day-body">
+            <button class="row-entry bill" type="button">
+              <span class="stripe"></span>
+              <span class="main">
+                <span class="title">Hydro</span>
+                <span class="meta"><span class="pill">Bill split</span>Toronto Hydro · 50%</span>
+              </span>
+              <span class="amount">$84.00</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- May 22 — TODAY -->
+        <div class="day today">
+          <div class="day-head">
+            <span class="dow">Thu</span>
+            <span class="dnum">22</span>
+            <span class="mon">May</span>
+            <span class="badge">Today</span>
+          </div>
+          <div class="day-body">
+            <button class="row-entry loan" type="button">
+              <span class="stripe"></span>
+              <span class="main">
+                <span class="title">Lunch</span>
+                <span class="meta"><span class="pill">Loan</span>Cash</span>
+              </span>
+              <span class="amount">$28.40</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- May 28 — Projected -->
+        <div class="day">
+          <div class="day-head">
+            <span class="dow">Thu</span>
+            <span class="dnum">28</span>
+            <span class="mon">May</span>
+            <span class="badge projected">Projected</span>
+          </div>
+          <div class="day-body">
+            <button class="row-entry bill projected" type="button"
+              aria-label="Projected bill — Phone plan, twenty-seven dollars fifty, not yet posted">
+              <span class="stripe"></span>
+              <span class="main">
+                <span class="title">Phone plan</span>
+                <span class="meta"><span class="pill">Bill split</span>Freedom · 50% · not yet posted</span>
+              </span>
+              <span class="amount">$27.50</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Jun 3 — Projected -->
+        <div class="day">
+          <div class="day-head">
+            <span class="dow">Wed</span>
+            <span class="dnum">3</span>
+            <span class="mon">Jun</span>
+            <span class="badge projected">Projected</span>
+          </div>
+          <div class="day-body">
+            <button class="row-entry bill projected" type="button">
+              <span class="stripe"></span>
+              <span class="main">
+                <span class="title">Internet</span>
+                <span class="meta"><span class="pill">Bill split</span>Bell · 50% · not yet posted</span>
+              </span>
+              <span class="amount">$40.50</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Jun 5 — Projected -->
+        <div class="day">
+          <div class="day-head">
+            <span class="dow">Fri</span>
+            <span class="dnum">5</span>
+            <span class="mon">Jun</span>
+            <span class="badge projected">Projected</span>
+          </div>
+          <div class="day-body">
+            <button class="row-entry bill projected" type="button">
+              <span class="stripe"></span>
+              <span class="main">
+                <span class="title">Streaming bundle</span>
+                <span class="meta"><span class="pill">Bill split</span>Netflix + Spotify · 50% · not yet posted</span>
+              </span>
+              <span class="amount">$16.00</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="legend" aria-label="Legend">
+        <div class="item"><span class="swatch loan"></span> Loan</div>
+        <div class="item"><span class="swatch bill"></span> Bill (posted)</div>
+        <div class="item"><span class="swatch projected"></span> Bill (projected)</div>
+        <div class="item"><span class="swatch payment"></span> Payment in</div>
+      </div>
+    </main>
+
+    <tab-nav active="calendar"></tab-nav>
+  </div>
+</body>
+</html>

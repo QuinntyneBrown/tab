@@ -29,6 +29,24 @@ body {
   align-items: stretch;
 }
 
+/* Angular component hosts (custom elements) default to `display: inline`,
+ * which prevents the `.app` grid container from establishing a correct
+ * containing block for `1fr` row resolution. Collapse all page-level hosts
+ * to `display: contents` so the grid sits directly under <body>. */
+app-root,
+app-dashboard,
+app-bills,
+app-loans,
+app-settings,
+app-statement,
+app-shared-statement,
+app-add-entry,
+app-edit-loan,
+app-login,
+tab-app-shell {
+  display: contents;
+}
+
 /* ============================================================
    .app — mobile-first shell.
    Mobile : full-bleed flex column, bottom nav.
@@ -66,28 +84,38 @@ main.main--no-nav { padding-bottom: var(--s-8); }
 @media (min-width: 960px) {
   body { background: var(--c-bg); }
 
+  /* Desktop shell: a single-column layout with the nav reserved via
+   * `padding-left`. `<tab-nav>` itself is `position: sticky` (defined in
+   * `nav.component.scss`), so it does NOT participate in grid track sizing.
+   * Earlier the nav was a grid item with `grid-row: 1 / -1; height: 100dvh`,
+   * which caused the track algorithm to either bloat row 1 (gap above main)
+   * or expand a `1fr` row (empty space below main). Pulling the nav out of
+   * the grid removes both failure modes; the page is exactly as tall as its
+   * content. */
   .app:has(tab-nav) {
     max-width: var(--content-max);
     margin-inline: auto;
-    display: grid;
-    grid-template-columns: var(--rail-w) 1fr;
-    align-items: stretch;
+    padding-left: var(--rail-w);
+    display: block;
+    position: relative;
+    /* Bound the shell to the viewport so only <main> scrolls; the nav rail
+     * stays put. Without this, a tall page makes the whole body scroll and
+     * the absolutely-positioned rail scrolls with it. */
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
   }
   .app:has(tab-nav) > tab-nav {
-    grid-column: 1;
-    grid-row: 1 / -1;
-    position: sticky;
+    position: absolute;
     top: 0;
-    align-self: start;
-    height: 100dvh;
-  }
-  .app:has(tab-nav) > *:not(tab-nav) {
-    grid-column: 2;
-    min-width: 0;
+    left: 0;
+    width: var(--rail-w);
+    height: 100%;
   }
   .app:has(tab-nav) main {
     padding: var(--s-8) var(--content-pad) var(--s-9);
     max-width: 920px;
+    height: 100dvh;
   }
 
   /* Login / Add — centered narrow card with framing */

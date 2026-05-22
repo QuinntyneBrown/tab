@@ -199,11 +199,6 @@ namespace Tab.Infrastructure.Persistence.Migrations
                     b.Property<int>("ReminderDays")
                         .HasColumnType("int");
 
-                    b.Property<string>("StatementTone")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
                     b.Property<DateTimeOffset>("UpdatedUtc")
                         .HasColumnType("datetimeoffset");
 

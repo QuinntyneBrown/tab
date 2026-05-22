@@ -17,8 +17,12 @@
 
 .greet {
   display: none;
+}
 
-  @media (min-width: 960px) {
+@media (min-width: 960px) {
+  .topbar { display: none; }
+
+  .greet {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
@@ -46,26 +50,16 @@
   grid-template-columns: 1fr 1fr;
   gap: var(--s-3);
   margin-top: var(--s-5);
-
-  a { display: contents; }
 }
 
+/* `.two-col` (column proportions + gap) lives in base.scss to match the mock —
+ * desktop ratio is 1.4fr 1fr (wider activity, narrower summary). The only
+ * dashboard-specific override is the top margin separating it from the nudge. */
 .two-col {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--s-6);
   margin-top: var(--s-7);
-
-  @media (min-width: 880px) {
-    grid-template-columns: 1fr 1fr;
-  }
 }
 
-.row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--s-3) var(--s-4);
-}
-
-.muted { color: var(--c-muted); }
+/* Layout primitives (`.row`, `.row-between`, `.muted`, `.strong`) live in
+ * base.scss so the dashboard relies on the shared utility classes. The summary
+ * rows use `class="row row-between"` to space label and amount across the card,
+ * matching docs/mocks/dashboard.html. */

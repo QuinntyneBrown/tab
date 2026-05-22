@@ -64,7 +64,13 @@
     } @else if (ledger.status() === 'success') {
       <tab-empty data-testid="ledger-empty">
         <span slot="title">No entries yet</span>
-        <a slot="action" href="/add?mode=loan">Add a loan</a>
+        <button
+          slot="action"
+          type="button"
+          class="ledger-empty__cta"
+          data-testid="ledger-add-loan"
+          (click)="openAddEntry('loan')"
+        >Add a loan</button>
       </tab-empty>
     }
   </main>

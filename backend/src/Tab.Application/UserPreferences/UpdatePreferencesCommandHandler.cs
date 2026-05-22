@@ -27,7 +27,6 @@ public class UpdatePreferencesCommandHandler : IRequestHandler<UpdatePreferences
         p.CurrencyCode = request.CurrencyCode;
         p.DefaultSplitPercent = request.DefaultSplitPercent;
         p.ReminderDays = request.ReminderDays;
-        p.StatementTone = request.StatementTone;
         p.UpdatedUtc = _timeProvider.GetUtcNow();
 
         await _db.SaveChangesAsync(cancellationToken);
@@ -36,8 +35,7 @@ public class UpdatePreferencesCommandHandler : IRequestHandler<UpdatePreferences
         {
             CurrencyCode = p.CurrencyCode,
             DefaultSplitPercent = p.DefaultSplitPercent,
-            ReminderDays = p.ReminderDays,
-            StatementTone = p.StatementTone
+            ReminderDays = p.ReminderDays
         };
     }
 }

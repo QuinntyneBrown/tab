@@ -20,6 +20,7 @@ export * from './lib/nav/nav.component';
 export * from './lib/row/row.component';
 
 /* Composition components recurring across screens */
+export * from './lib/add-entry-dialog/add-entry-dialog.component';
 export * from './lib/amount-input/amount-input.component';
 export * from './lib/app-shell/app-shell.component';
 export * from './lib/bill-card/bill-card.component';

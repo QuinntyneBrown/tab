@@ -22,7 +22,6 @@ public class PreferencesTests : IClassFixture<TabApiFactory>
         prefs!.CurrencyCode.Should().Be("CAD");
         prefs.DefaultSplitPercent.Should().Be(50);
         prefs.ReminderDays.Should().Be(3);
-        prefs.StatementTone.Should().Be("Neutral");
     }
 
     [Fact]
@@ -33,8 +32,7 @@ public class PreferencesTests : IClassFixture<TabApiFactory>
         {
             CurrencyCode = "USD",
             DefaultSplitPercent = 60,
-            ReminderDays = 7,
-            StatementTone = "Neutral"
+            ReminderDays = 7
         });
         resp.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -52,8 +50,7 @@ public class PreferencesTests : IClassFixture<TabApiFactory>
         {
             CurrencyCode = "usd",
             DefaultSplitPercent = 50,
-            ReminderDays = 3,
-            StatementTone = "Neutral"
+            ReminderDays = 3
         });
         resp.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }

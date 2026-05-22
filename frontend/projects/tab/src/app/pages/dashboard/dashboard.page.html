@@ -7,7 +7,7 @@
   <main>
     @if (dashboard.value(); as data) {
       <div class="greet">
-        <h1>{{ greeting() }}, {{ data.counterparty.name }}</h1>
+        <h1>{{ greeting() }}, {{ me.value()?.displayName ?? 'there' }}</h1>
         <span class="date">{{ today() }}</span>
       </div>
 
@@ -28,12 +28,18 @@
           }
         </div>
         <div class="quick">
-          <a routerLink="/add" [queryParams]="{ mode: 'loan' }">
-            <tab-button full variant="ghost">Add a loan</tab-button>
-          </a>
-          <a routerLink="/add" [queryParams]="{ mode: 'bill' }">
-            <tab-button full variant="ghost">Log a bill</tab-button>
-          </a>
+          <tab-button
+            full
+            variant="ghost"
+            data-testid="dashboard-add-loan"
+            (click)="openAddEntry('loan')"
+          >Add a loan</tab-button>
+          <tab-button
+            full
+            variant="ghost"
+            data-testid="dashboard-add-bill"
+            (click)="openAddEntry('bill')"
+          >Log a bill</tab-button>
         </div>
       </tab-card>
 
@@ -79,23 +85,23 @@
         <section data-testid="monthly-summary">
           <tab-section-head title="This month at a glance"></tab-section-head>
           <tab-card flat>
-            <div class="row" data-testid="summary-lent">
+            <div class="row row-between" data-testid="summary-lent">
               <span class="muted">Lent</span>
               <tab-amount [value]="data.monthlySummary.lent"></tab-amount>
             </div>
             <tab-divider></tab-divider>
-            <div class="row" data-testid="summary-bills">
+            <div class="row row-between" data-testid="summary-bills">
               <span class="muted">Bills (their half)</span>
               <tab-amount [value]="data.monthlySummary.bills"></tab-amount>
             </div>
             <tab-divider></tab-divider>
-            <div class="row" data-testid="summary-paid-back">
+            <div class="row row-between" data-testid="summary-paid-back">
               <span class="muted">Paid back</span>
               <tab-amount muted [value]="data.monthlySummary.paidBack"></tab-amount>
             </div>
             <tab-divider strong></tab-divider>
-            <div class="row" data-testid="summary-net">
-              <strong>Net change</strong>
+            <div class="row row-between" data-testid="summary-net">
+              <span class="strong">Net change</span>
               <tab-amount [value]="data.monthlySummary.netChange"></tab-amount>
             </div>
           </tab-card>

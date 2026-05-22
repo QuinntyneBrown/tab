@@ -1,0 +1,101 @@
+/* CDK Dialog drops the component into a panel under the global overlay
+ * container, outside the Angular component tree. Because of that, view
+ * encapsulation can't reach it — the rules here use the `tab-add-entry-dialog`
+ * element selector (no encapsulation attribute) and rely on the global token
+ * variables defined on :root. */
+
+.tab-add-entry-dialog__backdrop {
+  background: var(--c-overlay);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.tab-add-entry-dialog__panel {
+  display: block;
+  max-width: 520px;
+  width: min(92vw, 520px);
+  max-height: min(92dvh, 800px);
+}
+
+.add-entry-dialog {
+  background: var(--c-surface);
+  color: var(--c-text);
+  border: 1px solid var(--c-hairline-strong);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-2);
+  display: flex;
+  flex-direction: column;
+  /* Cap to viewport so the scrolling area is `.add-entry-dialog__body`, not
+   * the page. `cdk-dialog-container` between the overlay pane and this element
+   * doesn't propagate the pane's max-height, so we set it directly. */
+  max-height: min(92dvh, 800px);
+  overflow: hidden;
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+    padding: var(--s-5) var(--s-6) var(--s-3);
+    border-bottom: 1px solid var(--c-hairline);
+  }
+
+  &__title {
+    margin: 0;
+    font-size: clamp(16px, 0.4vw + 14px, 18px);
+    font-weight: 600;
+    color: var(--c-text-strong);
+    letter-spacing: -0.005em;
+  }
+
+  &__close {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    color: var(--c-muted);
+    border-radius: var(--r-pill);
+    cursor: pointer;
+    transition: background var(--ease) var(--dur-fast),
+      color var(--ease) var(--dur-fast);
+  }
+  &__close:hover {
+    background: var(--c-elevated);
+    color: var(--c-text-strong);
+  }
+  &__close:focus-visible {
+    outline: 2px solid var(--c-focus);
+    outline-offset: 2px;
+  }
+
+  &__body {
+    padding: var(--s-5) var(--s-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+    overflow-y: auto;
+  }
+
+  &__hint {
+    color: var(--c-muted);
+    font-size: 13px;
+    margin: 0;
+  }
+
+  &__error {
+    color: #ff6b6b;
+    margin: 0;
+    font-size: 13px;
+  }
+
+  &__foot {
+    display: flex;
+    gap: var(--s-3);
+    justify-content: flex-end;
+    padding: var(--s-4) var(--s-6) var(--s-5);
+    border-top: 1px solid var(--c-hairline);
+    background: var(--c-surface);
+  }
+}

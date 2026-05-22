@@ -42,12 +42,6 @@ export const routes: Routes = [
       import('./pages/bills/bills.page').then((m) => m.BillsPage),
   },
   {
-    path: 'add',
-    canActivate: [authGuard],
-    loadComponent: () =>
-      import('./pages/add-entry/add-entry.page').then((m) => m.AddEntryPage),
-  },
-  {
     path: 'statement',
     canActivate: [authGuard],
     loadComponent: () =>

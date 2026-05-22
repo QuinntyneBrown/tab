@@ -1,6 +1,6 @@
 // Acceptance Test
 // Traces to: L2-021
-// Description: Currency, default split, reminder lead-time, statement-tone preferences.
+// Description: Currency, default split, and reminder lead-time preferences.
 
 import { test, expect } from '../fixtures/app-fixtures';
 

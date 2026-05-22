@@ -52,9 +52,6 @@ The fraction of a recurring bill that the counterparty owes. Configurable per bi
 ### Reminder lead time
 The number of days before a bill's due date at which the app starts surfacing a nudge.
 
-### Statement tone
-A user preference controlling the wording style of the shareable statement.
-
 ## Requirements and traceability
 
 ### L1

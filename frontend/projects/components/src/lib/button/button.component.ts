@@ -39,6 +39,12 @@ export class ButtonComponent {
       e.preventDefault();
       return;
     }
+    // Stop the inner button's native click from also bubbling out of the
+    // shadow root as a `click` event on the `<tab-button>` host element.
+    // Because the host has `@Output('click') tabClick`, both the native
+    // bubbled event AND the emit fire — duplicating every parent handler
+    // bound to `(click)` (e.g. opening a dialog twice).
+    e.stopPropagation();
     this.tabClick.emit(e);
   }
 }

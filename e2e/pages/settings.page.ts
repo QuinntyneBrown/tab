@@ -10,7 +10,6 @@ export class SettingsPage extends BasePage {
   readonly currencySelect: Locator;
   readonly defaultSplitInput: Locator;
   readonly reminderLeadInput: Locator;
-  readonly statementToneSelect: Locator;
   readonly preferencesSave: Locator;
   readonly exportButton: Locator;
   readonly signOutButton: Locator;
@@ -27,7 +26,6 @@ export class SettingsPage extends BasePage {
     this.currencySelect = page.getByLabel(/currency/i);
     this.defaultSplitInput = page.getByLabel(/default split/i);
     this.reminderLeadInput = page.getByLabel(/reminder lead/i);
-    this.statementToneSelect = page.getByLabel(/statement tone/i);
     this.preferencesSave = page
       .getByTestId('preferences-section')
       .getByRole('button', { name: /^save$/i });

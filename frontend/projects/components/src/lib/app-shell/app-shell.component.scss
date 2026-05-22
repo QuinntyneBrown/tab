@@ -1,4 +1,11 @@
-/* The `.app` block is styled exclusively by base.scss (loaded globally), so the
-   shell component itself contributes no scoped styles. The block-level
-   modifiers `.app--no-nav` and `.app--statement` are also defined in base.scss
-   alongside the `.app` rules they amend. */
+/* The `.app` block is styled exclusively by base.scss (loaded globally). The
+   shell host renders as `display: contents` so the `.app` grid container is a
+   direct child of the routed page host, keeping the desktop grid containing
+   block correct. Without this, the host's default `display: inline` breaks
+   `1fr` row resolution and adds phantom vertical space.
+
+   Encapsulation is `None` on the component, so this rule applies to the host
+   element directly. */
+tab-app-shell {
+  display: contents;
+}

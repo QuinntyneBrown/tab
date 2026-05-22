@@ -9,6 +9,82 @@
   <link rel="stylesheet" href="assets/css/base.css" />
   <script src="assets/js/components.js" defer></script>
   <style>
+    /* ============================================================
+       Dialog framing — make it obvious this is an overlay.
+       The body becomes a dimmed backdrop; .app becomes the dialog.
+    ============================================================ */
+    body {
+      background: var(--c-overlay), radial-gradient(circle at 50% 0%, #38383b 0%, #1d1d1f 70%);
+      background-blend-mode: normal;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: var(--c-overlay);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .app {
+      position: relative;
+      z-index: 1;
+      background: var(--c-surface);
+      border-radius: var(--r-xl);
+      border: 1px solid var(--c-hairline-strong);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.55),
+                  0 2px 6px rgba(0,0,0,0.35);
+      max-width: 520px;
+      width: calc(100% - var(--s-5) * 2);
+      margin: var(--s-5) auto;
+      min-height: 0;
+      overflow: hidden;
+    }
+    @media (min-width: 640px) {
+      .app { margin: var(--s-9) auto; }
+    }
+
+    /* Dialog header — title left, close X right */
+    .dialog-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: var(--s-3);
+      padding: var(--s-5) var(--s-6) var(--s-3);
+      border-bottom: 1px solid var(--c-hairline);
+    }
+    .dialog-head h2 {
+      font-size: var(--fs-lg);
+      color: var(--c-text-strong);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .close-btn {
+      width: 36px; height: 36px;
+      display: grid; place-items: center;
+      background: transparent;
+      border: 1px solid var(--c-hairline-strong);
+      border-radius: 50%;
+      color: var(--c-text);
+      cursor: pointer;
+      transition: background var(--ease) 160ms, color var(--ease) 160ms, border-color var(--ease) 160ms;
+    }
+    .close-btn:hover {
+      background: var(--c-elevated);
+      color: var(--c-text-strong);
+      border-color: var(--c-text-faint);
+    }
+    .close-btn svg { width: 16px; height: 16px; display: block; }
+
+    /* Body of the dialog */
+    main.dialog-body {
+      padding: var(--s-6);
+      max-height: calc(100dvh - var(--s-9) * 2 - 72px);
+      overflow-y: auto;
+    }
+
     .seg {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
@@ -68,10 +144,15 @@
   </style>
 </head>
 <body>
-  <div class="app">
-    <tab-header title="New entry" back href="dashboard.html"></tab-header>
+  <div class="app" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+    <header class="dialog-head">
+      <h2 id="dialog-title">New entry</h2>
+      <a class="close-btn" href="dashboard.html" aria-label="Close dialog">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6l-12 12"/></svg>
+      </a>
+    </header>
 
-    <main class="no-nav">
+    <main class="dialog-body">
       <div class="add-wrap">
       <div class="seg" role="tablist">
         <button role="tab" aria-selected="true">Loan</button>

@@ -49,7 +49,6 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, G
             CurrencyCode = "CAD",
             DefaultSplitPercent = 50,
             ReminderDays = 3,
-            StatementTone = "Neutral",
             UpdatedUtc = now
         });
         await _db.SaveChangesAsync(cancellationToken);

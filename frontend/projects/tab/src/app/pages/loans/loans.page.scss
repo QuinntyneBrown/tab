@@ -45,6 +45,22 @@
   }
 }
 
+.ledger-empty__cta {
+  background: transparent;
+  border: 1px solid var(--c-hairline-strong);
+  border-radius: var(--r-pill);
+  padding: 8px 16px;
+  color: var(--c-text-strong);
+  font: inherit;
+  cursor: pointer;
+  transition: background var(--ease) var(--dur-fast);
+}
+.ledger-empty__cta:hover { background: var(--c-elevated); }
+.ledger-empty__cta:focus-visible {
+  outline: 2px solid var(--c-focus);
+  outline-offset: 2px;
+}
+
 .month-header {
   display: flex;
   align-items: baseline;

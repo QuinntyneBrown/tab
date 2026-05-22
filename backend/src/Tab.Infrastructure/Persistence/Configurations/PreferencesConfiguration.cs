@@ -13,7 +13,6 @@ public class PreferencesConfiguration : IEntityTypeConfiguration<Preferences>
         b.Property(x => x.CurrencyCode).IsRequired().HasMaxLength(3);
         b.Property(x => x.DefaultSplitPercent).IsRequired();
         b.Property(x => x.ReminderDays).IsRequired();
-        b.Property(x => x.StatementTone).IsRequired().HasMaxLength(20);
         b.Property(x => x.UpdatedUtc).IsRequired();
         b.HasOne<User>().WithOne().HasForeignKey<Preferences>(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
     }

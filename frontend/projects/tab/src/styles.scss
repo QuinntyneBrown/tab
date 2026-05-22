@@ -7,6 +7,10 @@
 @use '../../components/src/lib/tokens' as tokens;
 @use '../../components/src/lib/base';
 
+/* CDK overlay structural styles (positioning, backdrop containment).
+ * Required for `@angular/cdk/dialog` to render correctly. */
+@import '@angular/cdk/overlay-prebuilt.css';
+
 :root {
   @include tokens.tab-tokens;
 }
