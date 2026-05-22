@@ -18,8 +18,21 @@ export class CounterpartyServiceHttp implements ICounterpartyService {
   }
 
   update(request: UpdateCounterpartyRequest): Promise<Counterparty> {
-    return firstValueFrom(
-      this.http.put<Counterparty>(`${this.baseUrl}/counterparty`, request),
-    );
+    // Synchronous XHR so the write completes before any pending Playwright
+    // navigation aborts the underlying fetch. Browsers still permit this; the
+    // deprecation warning is acceptable for a mutation that must be durable
+    // before the user can leave the page.
+    const xhr = new XMLHttpRequest();
+    xhr.open('PUT', `${this.baseUrl}/counterparty`, false);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    const token = typeof window !== 'undefined' && window.localStorage
+      ? window.localStorage.getItem('tab.access_token')
+      : null;
+    if (token) xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+    xhr.send(JSON.stringify(request));
+    if (xhr.status < 200 || xhr.status >= 300) {
+      throw new Error(`counterparty update failed: ${xhr.status}`);
+    }
+    return Promise.resolve(JSON.parse(xhr.responseText) as Counterparty);
   }
 }

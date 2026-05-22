@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Tab.Api.Contracts.Balance;
 using Tab.Api.Contracts.Bills;
+using Tab.Api.Contracts.Counterparties;
 using Tab.Api.Contracts.Dashboard;
 using Tab.Api.Contracts.Ledger;
 using Tab.Application.Abstractions;
@@ -63,8 +64,17 @@ public class GetDashboardQueryHandler : IRequestHandler<GetDashboardQuery, Dashb
             }
         }
 
+        var counterparty = await _db.Counterparties.AsNoTracking()
+            .FirstOrDefaultAsync(c => c.UserId == _user.Id, cancellationToken);
+
         return new DashboardResponse
         {
+            Counterparty = new CounterpartyResponse
+            {
+                Id = counterparty?.Id ?? Guid.Empty,
+                Name = counterparty?.Name ?? "Counterparty",
+                Note = counterparty?.Note
+            },
             Balance = new BalanceResponse
             {
                 Amount = loansTotal + billsTotal - paymentsTotal,

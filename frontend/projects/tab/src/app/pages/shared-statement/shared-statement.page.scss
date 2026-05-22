@@ -1,0 +1,27 @@
+.shared {
+  min-height: 100dvh;
+  padding: var(--s-7) var(--s-5);
+  background: var(--c-bg);
+
+  &__card {
+    max-width: 760px;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-6);
+
+    h1 {
+      font-family: var(--font-num);
+      margin: 0;
+      color: var(--c-text-strong);
+    }
+  }
+
+  &__expired {
+    text-align: center;
+    color: var(--c-muted);
+    margin-top: 20vh;
+  }
+}
+
+.muted { color: var(--c-muted); }

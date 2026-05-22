@@ -13,6 +13,7 @@ export default defineConfig({
     : [['list'], ['html', { open: 'never' }]],
   timeout: 30_000,
   expect: { timeout: 5_000 },
+  snapshotPathTemplate: 'visual/baselines/{arg}{ext}',
   use: {
     baseURL: BASE_URL,
     trace: 'on-first-retry',

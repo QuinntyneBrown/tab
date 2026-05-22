@@ -1,0 +1,112 @@
+<tab-app-shell data-ready>
+  <div class="topbar">
+    <span class="topbar__brand">tab<span class="topbar__accent">.</span></span>
+    <tab-avatar name="You" size="sm"></tab-avatar>
+  </div>
+
+  <main>
+    @if (dashboard.value(); as data) {
+      <div class="greet">
+        <h1>{{ greeting() }}, {{ data.counterparty.name }}</h1>
+        <span class="date">{{ today() }}</span>
+      </div>
+
+      <tab-card hero padding="lg">
+        <div class="hero" data-testid="hero-card">
+          <tab-eyebrow data-testid="hero-eyebrow">
+            {{ data.counterparty.name }} owes
+          </tab-eyebrow>
+          <tab-amount
+            data-testid="hero-amount"
+            size="hero"
+            [value]="data.balance.amount"
+            [attr.data-currency]="data.balance.currency"
+            [attr.aria-label]="heroAriaLabel(data.balance.amount, data.balance.currency)"
+          ></tab-amount>
+          @if (lastActivityDaysAgo(data.recentActivity); as ago) {
+            <div class="hero-meta">Last activity · {{ ago }}</div>
+          }
+        </div>
+        <div class="quick">
+          <a routerLink="/add" [queryParams]="{ mode: 'loan' }">
+            <tab-button full variant="ghost">Add a loan</tab-button>
+          </a>
+          <a routerLink="/add" [queryParams]="{ mode: 'bill' }">
+            <tab-button full variant="ghost">Log a bill</tab-button>
+          </a>
+        </div>
+      </tab-card>
+
+      @if (data.nudge; as nudge) {
+        <tab-nudge data-testid="dashboard-nudge" label="Heads up.">
+          {{ nudge.billName }} is due in {{ nudge.daysUntilDue }} day(s).
+          Your share will be roughly
+          <tab-amount size="md" [value]="nudge.expectedShare"></tab-amount>
+          — their half will post automatically once you mark it paid.
+        </tab-nudge>
+      }
+
+      <div class="two-col">
+        <section data-testid="recent-activity">
+          <tab-section-head title="Recent activity"></tab-section-head>
+          @if (data.recentActivity.length) {
+            <tab-card padding="sm">
+              @for (entry of data.recentActivity; track entry.id; let last = $last) {
+                <tab-row interactive [last]="last">
+                  <tab-avatar slot="leading" [name]="entry.description"></tab-avatar>
+                  <span slot="title">{{ entry.description }}</span>
+                  <span slot="meta">
+                    {{ entry.date }} · {{ entry.type }}
+                  </span>
+                  <tab-amount
+                    slot="trailing"
+                    [value]="entry.counterpartyShare"
+                    [muted]="entry.type === 'payment'"
+                    [sign]="entry.type === 'payment' ? '−' : null"
+                    size="md"
+                  ></tab-amount>
+                </tab-row>
+              }
+            </tab-card>
+          } @else {
+            <tab-empty data-testid="activity-empty">
+              <span slot="title">No entries yet</span>
+              <span slot="meta">Add a loan or log a bill to start the ledger.</span>
+            </tab-empty>
+          }
+        </section>
+
+        <section data-testid="monthly-summary">
+          <tab-section-head title="This month at a glance"></tab-section-head>
+          <tab-card flat>
+            <div class="row" data-testid="summary-lent">
+              <span class="muted">Lent</span>
+              <tab-amount [value]="data.monthlySummary.lent"></tab-amount>
+            </div>
+            <tab-divider></tab-divider>
+            <div class="row" data-testid="summary-bills">
+              <span class="muted">Bills (their half)</span>
+              <tab-amount [value]="data.monthlySummary.bills"></tab-amount>
+            </div>
+            <tab-divider></tab-divider>
+            <div class="row" data-testid="summary-paid-back">
+              <span class="muted">Paid back</span>
+              <tab-amount muted [value]="data.monthlySummary.paidBack"></tab-amount>
+            </div>
+            <tab-divider strong></tab-divider>
+            <div class="row" data-testid="summary-net">
+              <strong>Net change</strong>
+              <tab-amount [value]="data.monthlySummary.netChange"></tab-amount>
+            </div>
+          </tab-card>
+        </section>
+      </div>
+    } @else if (dashboard.status() === 'loading') {
+      <p class="muted">Loading…</p>
+    } @else if (dashboard.status() === 'error') {
+      <p class="muted">Couldn’t load the dashboard. Please retry.</p>
+    }
+  </main>
+
+  <tab-nav active="dashboard"></tab-nav>
+</tab-app-shell>

@@ -82,13 +82,8 @@
               }
             ],
             "styles": ["projects/tab/src/styles.scss"],
-            "server": "projects/tab/src/main.server.ts",
-            "outputMode": "server",
             "security": {
               "allowedHosts": []
-            },
-            "ssr": {
-              "entry": "projects/tab/src/server.ts"
             }
           },
           "configurations": {
@@ -117,6 +112,9 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "proxyConfig": "proxy.conf.json"
+          },
           "configurations": {
             "production": {
               "buildTarget": "tab:build:production"

@@ -1,5 +1,5 @@
 @if (label) {
-  <label class="input__label" part="label">{{ label }}</label>
+  <label class="input__label" part="label" [attr.for]="inputId">{{ label }}</label>
 }
 <div class="input__field">
   @if (prefix) {
@@ -8,6 +8,8 @@
   <input
     #input
     class="input__control"
+    [id]="inputId"
+    [attr.aria-label]="label || null"
     [type]="type"
     [attr.inputmode]="inputmode"
     [attr.autocomplete]="autocomplete"

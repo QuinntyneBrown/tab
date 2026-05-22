@@ -24,19 +24,23 @@ public class BalanceAndDashboardTests : IClassFixture<TabApiFactory>
 
         await client.PostAsJsonAsync("/api/v1/loans", new CreateLoanRequest
         {
-            Amount = 505m, Date = DateOnly.FromDateTime(DateTime.UtcNow), Description = "Bulk loans"
+            Amount = 505m,
+            Date = DateOnly.FromDateTime(DateTime.UtcNow),
+            Description = "Bulk loans"
         });
 
         var bill = await CreateBill(client, "Hydro", 1759m, 50);
         var posting = await client.PostAsJsonAsync($"/api/v1/bills/{bill.Id}/postings", new CreateBillPostingRequest
         {
-            Period = "2026-04", ActualTotal = 1759m
+            Period = "2026-04",
+            ActualTotal = 1759m
         });
         posting.EnsureSuccessStatusCode();
 
         await client.PostAsJsonAsync("/api/v1/payments", new CreatePaymentRequest
         {
-            Amount = 100m, Date = DateOnly.FromDateTime(DateTime.UtcNow)
+            Amount = 100m,
+            Date = DateOnly.FromDateTime(DateTime.UtcNow)
         });
 
         var balance = await client.GetFromJsonAsync<BalanceResponse>("/api/v1/balance");
@@ -49,7 +53,9 @@ public class BalanceAndDashboardTests : IClassFixture<TabApiFactory>
         var client = await AuthenticatedClient.CreateAsync(_factory, "zoe@example.com", "Passcode!1");
         await client.PostAsJsonAsync("/api/v1/loans", new CreateLoanRequest
         {
-            Amount = 20m, Date = DateOnly.FromDateTime(DateTime.UtcNow), Description = "Small"
+            Amount = 20m,
+            Date = DateOnly.FromDateTime(DateTime.UtcNow),
+            Description = "Small"
         });
         var p = await client.PostAsJsonAsync("/api/v1/payments", new CreatePaymentRequest { Amount = 100m });
         p.EnsureSuccessStatusCode();
@@ -63,7 +69,9 @@ public class BalanceAndDashboardTests : IClassFixture<TabApiFactory>
         var client = await AuthenticatedClient.CreateAsync(_factory, "amber@example.com", "Passcode!1");
         await client.PostAsJsonAsync("/api/v1/loans", new CreateLoanRequest
         {
-            Amount = 50m, Date = DateOnly.FromDateTime(DateTime.UtcNow), Description = "Snack run"
+            Amount = 50m,
+            Date = DateOnly.FromDateTime(DateTime.UtcNow),
+            Description = "Snack run"
         });
         var dashboard = await client.GetFromJsonAsync<DashboardResponse>("/api/v1/dashboard");
         dashboard!.Balance.Amount.Should().Be(50m);
@@ -86,7 +94,10 @@ public class BalanceAndDashboardTests : IClassFixture<TabApiFactory>
     {
         var resp = await client.PostAsJsonAsync("/api/v1/bills", new CreateBillRequest
         {
-            Name = name, ExpectedAmount = expected, DueDay = 15, SplitPercent = splitPercent
+            Name = name,
+            ExpectedAmount = expected,
+            DueDay = 15,
+            SplitPercent = splitPercent
         });
         resp.EnsureSuccessStatusCode();
         return (await resp.Content.ReadFromJsonAsync<BillResponse>())!;

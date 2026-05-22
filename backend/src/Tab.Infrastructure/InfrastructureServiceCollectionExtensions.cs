@@ -14,7 +14,18 @@ public static class InfrastructureServiceCollectionExtensions
         var connectionString = configuration.GetConnectionString("Tab")
             ?? "Server=(localdb)\\MSSQLLocalDB;Database=Tab;Trusted_Connection=True;Encrypt=False";
 
-        services.AddDbContext<TabDbContext>(options => options.UseSqlServer(connectionString));
+        var provider = configuration["Database:Provider"] ?? "SqlServer";
+        services.AddDbContext<TabDbContext>(options =>
+        {
+            if (string.Equals(provider, "Sqlite", StringComparison.OrdinalIgnoreCase))
+            {
+                options.UseSqlite(connectionString);
+            }
+            else
+            {
+                options.UseSqlServer(connectionString);
+            }
+        });
         services.AddScoped<ITabDbContext>(sp => sp.GetRequiredService<TabDbContext>());
 
         services.AddSingleton(TimeProvider.System);

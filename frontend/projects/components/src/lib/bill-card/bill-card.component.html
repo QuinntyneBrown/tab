@@ -6,6 +6,7 @@
         <div class="bill-card__meta">{{ meta }}</div>
       </div>
       <tab-badge
+        data-testid="bill-badge"
         [variant]="badge.variant ?? 'default'"
         [dot]="!!badge.dot">{{ badge.text }}</tab-badge>
     </div>
@@ -34,6 +35,9 @@
       </tab-button>
       <tab-button full size="sm" variant="ghost" (click)="secondaryClick.emit()">
         {{ secondaryAction }}
+      </tab-button>
+      <tab-button full size="sm" variant="ghost" (click)="tertiaryClick.emit()">
+        {{ tertiaryAction }}
       </tab-button>
     </div>
   </div>

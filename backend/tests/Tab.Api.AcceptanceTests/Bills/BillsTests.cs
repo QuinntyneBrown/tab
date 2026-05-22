@@ -38,7 +38,10 @@ public class BillsTests : IClassFixture<TabApiFactory>
         var client = await AuthenticatedClient.CreateAsync(_factory, "sam@example.com", "Passcode!1");
         var resp = await client.PostAsJsonAsync("/api/v1/bills", new CreateBillRequest
         {
-            Name = "Bad", ExpectedAmount = 100m, DueDay = 15, SplitPercent = 100
+            Name = "Bad",
+            ExpectedAmount = 100m,
+            DueDay = 15,
+            SplitPercent = 100
         });
         resp.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         (await resp.Content.ReadAsStringAsync()).Should().Contain("between 1 and 99");
@@ -102,7 +105,10 @@ public class BillsTests : IClassFixture<TabApiFactory>
 
         var put = await client.PutAsJsonAsync($"/api/v1/bills/{bill.Id}", new UpdateBillRequest
         {
-            Name = "Hydro", ExpectedAmount = 81m, DueDay = 15, SplitPercent = 60
+            Name = "Hydro",
+            ExpectedAmount = 81m,
+            DueDay = 15,
+            SplitPercent = 60
         });
         put.StatusCode.Should().Be(HttpStatusCode.OK);
 

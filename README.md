@@ -118,16 +118,41 @@ The development server runs at `http://localhost:4200` by default.
 
 Playwright is configured under `e2e/` and defaults to `http://localhost:4200`.
 
-Start the frontend app first, then run:
+The single command that boots the entire stack (migrate + seed users + start API + start Angular dev server + run Playwright + tear everything down) lives in `backend/build.ps1`:
+
+```powershell
+cd backend
+.\build.ps1 e2e
+.\build.ps1 e2e -- --project=chromium-desktop --grep "L2-001"
+```
+
+For ad-hoc runs against a stack you've already started:
 
 ```powershell
 cd e2e
-
 $env:E2E_BASE_URL = "http://localhost:4200"
 npm test
 ```
 
-Acceptance specs should live under `e2e/tests` and include their traced L2 requirement IDs in a header comment.
+Visual-parity baselines live under `e2e/visual/baselines/` and are captured from `docs/mocks/*.html`:
+
+```powershell
+cd e2e
+npx tsx visual/capture-baselines.ts
+```
+
+After intentional design changes, refresh baselines with `npm test -- visual.spec.ts --update-snapshots`.
+
+Acceptance specs live under `e2e/tests` and include their traced L2 requirement IDs in a header comment. `backend/Scripts/Verify-Traces.ps1` (or `./backend/build.ps1 traces`) enforces this on every test file in the repo.
+
+## Performance Smoke
+
+`backend/tests/perf/Tab.Perf.csproj` runs an NBomber scenario against `/api/v1/dashboard` and `/api/v1/loans` after seeding 10 000 loans, asserting p95 ≤ 300 ms. Boot the API and DB, then run:
+
+```powershell
+cd backend
+.\build.ps1 perf
+```
 
 ## Documentation
 

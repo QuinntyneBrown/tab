@@ -1,5 +1,5 @@
 // Acceptance Test
-// Traces to: L2-005, L2-007, L2-009, L2-010, L2-023
+// Traces to: L2-005, L2-007, L2-008, L2-009, L2-010, L2-023
 // Description: Loans CRUD with per-user isolation and validation.
 using System.Net;
 using System.Net.Http.Json;
@@ -103,6 +103,30 @@ public class LoansTests : IClassFixture<TabApiFactory>
         var aliceLoan = await CreateLoan(alice, 99m, "Alice loan");
         var resp = await bob.GetAsync($"/api/v1/loans/{aliceLoan.Id}");
         resp.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task ListLoans_AcrossMonths_ReturnsReverseChronological()
+    {
+        var client = await AuthenticatedClient.CreateAsync(_factory, "ros@example.com", "Passcode!1");
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var oldest = today.AddMonths(-2);
+        var middle = today.AddMonths(-1);
+        var newest = today;
+
+        foreach (var (date, desc) in new[] { (oldest, "old"), (newest, "new"), (middle, "mid") })
+        {
+            var resp = await client.PostAsJsonAsync("/api/v1/loans", new CreateLoanRequest
+            {
+                Amount = 10m,
+                Date = date,
+                Description = desc
+            });
+            resp.EnsureSuccessStatusCode();
+        }
+
+        var list = await client.GetFromJsonAsync<List<LedgerEntryResponse>>("/api/v1/loans");
+        list!.Select(e => e.Description).Should().ContainInOrder("new", "mid", "old");
     }
 
     private static async Task<LoanResponse> CreateLoan(HttpClient client, decimal amount, string description)

@@ -19,12 +19,14 @@ public class ExportTests : IClassFixture<TabApiFactory>
         var client = await AuthenticatedClient.CreateAsync(_factory, "gail@example.com", "Passcode!1");
         await client.PostAsJsonAsync("/api/v1/loans", new CreateLoanRequest
         {
-            Amount = 12.34m, Date = DateOnly.FromDateTime(DateTime.UtcNow),
+            Amount = 12.34m,
+            Date = DateOnly.FromDateTime(DateTime.UtcNow),
             Description = "Apples, Oranges, and \"Pears\""
         });
         await client.PostAsJsonAsync("/api/v1/loans", new CreateLoanRequest
         {
-            Amount = 5m, Date = DateOnly.FromDateTime(DateTime.UtcNow),
+            Amount = 5m,
+            Date = DateOnly.FromDateTime(DateTime.UtcNow),
             Description = "Plain"
         });
 

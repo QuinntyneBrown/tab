@@ -40,9 +40,11 @@ export class BillCardComponent {
   @Input({ transform: booleanAttribute }) primaryMuted = false;
   @Input() splitKey = "Their half";
   @Input() splitValue: number | string = 0;
-  @Input() primaryAction = 'Log this month';
-  @Input() secondaryAction = 'Edit';
+  @Input() primaryAction = 'Mark paid in full';
+  @Input() secondaryAction = 'Log this month';
+  @Input() tertiaryAction = 'Edit';
 
   @Output() primaryClick = new EventEmitter<void>();
   @Output() secondaryClick = new EventEmitter<void>();
+  @Output() tertiaryClick = new EventEmitter<void>();
 }

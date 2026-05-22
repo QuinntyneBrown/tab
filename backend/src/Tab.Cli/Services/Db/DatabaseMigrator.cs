@@ -17,6 +17,13 @@ public sealed class DatabaseMigrator : IDatabaseMigrator
 
     public async Task MigrateAsync(CancellationToken cancellationToken)
     {
+        if (_db.Database.IsSqlite())
+        {
+            _logger.LogInformation("Sqlite provider detected; using EnsureCreatedAsync.");
+            await _db.Database.EnsureCreatedAsync(cancellationToken);
+            return;
+        }
+
         var pending = (await _db.Database.GetPendingMigrationsAsync(cancellationToken)).ToList();
         if (pending.Count == 0)
         {

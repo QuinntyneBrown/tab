@@ -36,7 +36,7 @@ dotnet publish backend/src/Tab.Cli -c Release -o bin/cli
 | `tab users list` | List every user. |
 | `tab users delete --email <e> --force` | Delete a user and all their ledger data. Destructive. |
 | `tab users reset-passcode --email <e> --passcode <p>` | **Administrator backdoor** — replace a user's passcode without their current one. |
-| `tab users seed` | Idempotently create the demo users (`admin@tab.local`, `quinn@tab.local`, `demo@tab.local`). |
+| `tab users seed` | Idempotently create demo users + the e2e fixture users (`admin@tab.local`, `quinn@tab.local`, `demo@tab.local`, `quinntynebrown@gmail.com`, `other.user@example.com`). |
 | `tab import loans   --user <e> --file <csv>` | Import loans from CSV. |
 | `tab import bills   --user <e> --file <csv>` | Import recurring-bill definitions from CSV. |
 | `tab import payments --user <e> --file <csv>` | Import payment-in records from CSV. |

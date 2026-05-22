@@ -13,6 +13,9 @@ public sealed class DemoUserSeeder : IUserSeeder
         new("admin@tab.local",  "Admin!2026"),
         new("quinn@tab.local",  "Quinn!2026"),
         new("demo@tab.local",   "Demo!2026"),
+        // E2E primary fixture user (see e2e/fixtures/test-users.ts).
+        new("quinntynebrown@gmail.com", "CorrectHorseBatteryStaple1!"),
+        new("other.user@example.com",   "AnotherStrongPasscode2@"),
     };
 
     private readonly ITabDbContext _db;

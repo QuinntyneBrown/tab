@@ -1,0 +1,20 @@
+.edit {
+  max-width: 480px;
+  margin-inline: auto;
+  padding: var(--s-5) var(--content-pad) var(--s-9);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+
+  &__error {
+    color: var(--c-danger, #ff6b6b);
+    margin: 0;
+    font-size: 13px;
+  }
+
+  &__actions {
+    display: flex;
+    gap: var(--s-3);
+    margin-top: var(--s-4);
+  }
+}

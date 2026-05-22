@@ -37,7 +37,9 @@ public class StatementTests : IDisposable
         var owner = await AuthenticatedClient.CreateAsync(_factory, "dora@example.com", "Passcode!1");
         await owner.PostAsJsonAsync("/api/v1/loans", new CreateLoanRequest
         {
-            Amount = 25m, Date = DateOnly.FromDateTime(DateTime.UtcNow), Description = "Shared"
+            Amount = 25m,
+            Date = DateOnly.FromDateTime(DateTime.UtcNow),
+            Description = "Shared"
         });
         var share = await owner.PostAsJsonAsync("/api/v1/statement/share", new CreateStatementShareRequest());
         share.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -55,7 +57,9 @@ public class StatementTests : IDisposable
         var owner = await AuthenticatedClient.CreateAsync(_factory, "edie@example.com", "Passcode!1");
         await owner.PostAsJsonAsync("/api/v1/loans", new CreateLoanRequest
         {
-            Amount = 25m, Date = DateOnly.FromDateTime(DateTime.UtcNow), Description = "Shared"
+            Amount = 25m,
+            Date = DateOnly.FromDateTime(DateTime.UtcNow),
+            Description = "Shared"
         });
         var share = await owner.PostAsJsonAsync("/api/v1/statement/share", new CreateStatementShareRequest());
         var info = (await share.Content.ReadFromJsonAsync<StatementShareResponse>())!;

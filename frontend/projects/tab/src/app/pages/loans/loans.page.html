@@ -1,0 +1,73 @@
+<tab-app-shell data-ready>
+  <main>
+    <header class="head">
+      <h1>Ledger</h1>
+      <tab-segmented
+        ariaLabel="Filter"
+        [segments]="segments"
+        [value]="filter()"
+        (valueChange)="setFilter($event)"
+      ></tab-segmented>
+    </header>
+
+    <div class="summary" data-testid="ledger-summary">
+      <div>
+        <span class="summary__label">Lent</span>
+        <tab-amount [value]="summary().lent" size="md"></tab-amount>
+      </div>
+      <div>
+        <span class="summary__label">Bills</span>
+        <tab-amount [value]="summary().bills" size="md"></tab-amount>
+      </div>
+      <div>
+        <span class="summary__label">Paid back</span>
+        <tab-amount [value]="summary().paid" size="md" muted></tab-amount>
+      </div>
+      <div>
+        <span class="summary__label">Net</span>
+        <tab-amount [value]="summary().net" size="md"></tab-amount>
+      </div>
+    </div>
+
+    @if (groups().length) {
+      <div class="month-grid" data-testid="month-grid">
+        @for (group of groups(); track group.key) {
+          <div data-testid="month-group">
+            <div class="month-header" data-testid="month-header">
+              <span>{{ group.label }}</span>
+              <span class="month-header__net">{{ formatSigned(group.net) }}</span>
+            </div>
+            <tab-card padding="sm">
+              @for (entry of group.entries; track entry.id; let last = $last) {
+                <tab-row
+                  interactive
+                  [last]="last"
+                  (click)="openEntry(entry)"
+                  data-testid="ledger-row"
+                >
+                  <tab-avatar slot="leading" [name]="entry.description"></tab-avatar>
+                  <span slot="title">{{ entry.description }}</span>
+                  <span slot="meta">{{ entry.date }} · {{ entry.type }}</span>
+                  <tab-amount
+                    slot="trailing"
+                    [value]="entry.counterpartyShare"
+                    [muted]="entry.type === 'payment'"
+                    [sign]="entry.type === 'payment' ? '−' : null"
+                    size="md"
+                  ></tab-amount>
+                </tab-row>
+              }
+            </tab-card>
+          </div>
+        }
+      </div>
+    } @else if (ledger.status() === 'success') {
+      <tab-empty data-testid="ledger-empty">
+        <span slot="title">No entries yet</span>
+        <a slot="action" href="/add?mode=loan">Add a loan</a>
+      </tab-empty>
+    }
+  </main>
+
+  <tab-nav active="loans"></tab-nav>
+</tab-app-shell>

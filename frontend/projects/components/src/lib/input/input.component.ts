@@ -14,6 +14,8 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
+let nextInputId = 0;
+
 /**
  * Labeled form field. See docs/components/tab-input.md.
  * Mirrors docs/mocks/assets/js/components.js:113-195.
@@ -49,6 +51,8 @@ export class InputComponent implements ControlValueAccessor {
   @Input() autocomplete: string | null = null;
   @Input({ transform: booleanAttribute }) money = false;
   @Input({ transform: booleanAttribute }) disabled = false;
+
+  readonly inputId = `tab-input-${++nextInputId}`;
 
   @Output() valueChange = new EventEmitter<string>();
   @Output('blur') blurOut = new EventEmitter<FocusEvent>();

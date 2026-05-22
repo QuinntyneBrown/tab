@@ -13,8 +13,15 @@ public static class TabApplicationBuilderExtensions
         {
             app.UseHttpsRedirection();
         }
+        app.UseRateLimiter();
         app.UseAuthentication();
+        app.UseMiddleware<UserIdEnricherMiddleware>();
         app.UseAuthorization();
+        if (app.Environment.IsDevelopment() || string.Equals(app.Environment.EnvironmentName, "E2E", StringComparison.OrdinalIgnoreCase))
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
         return app;
     }
 }

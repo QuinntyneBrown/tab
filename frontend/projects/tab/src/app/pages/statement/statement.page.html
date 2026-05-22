@@ -1,0 +1,76 @@
+<tab-app-shell statement data-ready>
+  <tab-header title="Statement" back href="/dashboard" data-testid="app-header"></tab-header>
+
+  <main class="no-nav">
+    @if (statement.value(); as data) {
+      <section class="statement">
+        <header class="statement__head">
+          <h1>{{ data.counterpartyName }} — {{ data.from }} to {{ data.to }}</h1>
+          <div class="statement__range" data-testid="statement-range">
+            <tab-input
+              label="From"
+              type="date"
+              [value]="from() || data.from"
+              (valueChange)="from.set($event)"
+            ></tab-input>
+            <tab-input
+              label="To"
+              type="date"
+              [value]="to() || data.to"
+              (valueChange)="to.set($event)"
+            ></tab-input>
+          </div>
+        </header>
+
+        <tab-ledger>
+          @for (entry of data.entries; track entry.id) {
+            <tab-ledger-row
+              data-testid="statement-row"
+              [desc]="entry.description"
+              [when]="entry.date"
+              [total]="entry.totalAmount ?? null"
+              [share]="entry.counterpartyShare"
+              [shareSign]="entry.type === 'payment' ? '−' : null"
+            ></tab-ledger-row>
+          }
+        </tab-ledger>
+
+        <tab-totals>
+          <tab-totals-row
+            label="Loans"
+            [value]="data.totals.loans"
+            data-testid="total-loans"
+          ></tab-totals-row>
+          <tab-totals-row
+            label="Bills (their half)"
+            [value]="data.totals.bills"
+            data-testid="total-bills"
+          ></tab-totals-row>
+          <tab-totals-row
+            label="Payments in"
+            sign="−"
+            muted
+            [value]="data.totals.payments"
+            data-testid="total-payments"
+          ></tab-totals-row>
+          <tab-totals-row
+            label="Balance owing"
+            labelStrong
+            final
+            amountSize="xl"
+            [value]="data.totals.balanceOwing"
+            data-testid="balance-owing"
+          ></tab-totals-row>
+        </tab-totals>
+
+        <div class="statement__actions" data-testid="statement-actions">
+          <tab-button (click)="share()">Share</tab-button>
+        </div>
+
+        @if (toast(); as message) {
+          <p class="statement__toast" role="status">{{ message }}</p>
+        }
+      </section>
+    }
+  </main>
+</tab-app-shell>

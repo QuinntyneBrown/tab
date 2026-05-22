@@ -1,0 +1,41 @@
+<div class="app" data-ready>
+  <section class="login" data-testid="login-card">
+    <div class="login__wordmark">tab<span class="login__accent">.</span></div>
+    <p class="login__tagline">
+      A quiet ledger between two people. Lend, share bills, settle clearly.
+    </p>
+
+    <form class="login__form stack" (ngSubmit)="submit()">
+      <tab-input
+        label="Email"
+        type="email"
+        autocomplete="email"
+        placeholder="you@domain.com"
+        [value]="email()"
+        (valueChange)="email.set($event)"
+      ></tab-input>
+
+      <tab-input
+        label="Passcode"
+        type="password"
+        autocomplete="current-password"
+        placeholder="••••••"
+        [value]="passcode()"
+        (valueChange)="passcode.set($event)"
+      ></tab-input>
+
+      @if (error(); as message) {
+        <p class="login__error" role="alert">{{ message }}</p>
+      }
+
+      <tab-button full [disabled]="busy()" (click)="submit()">
+        {{ busy() ? 'Signing in…' : 'Sign in' }}
+      </tab-button>
+      <tab-button full variant="ghost" type="button">Use a magic link</tab-button>
+    </form>
+  </section>
+
+  <footer class="login__footer">
+    <p>By signing in you agree to keep things kind, even when balances aren't.</p>
+  </footer>
+</div>

@@ -1,0 +1,85 @@
+<tab-app-shell data-ready>
+  <main>
+    <header class="head">
+      <h1>Bills</h1>
+      <tab-button (click)="openCreate()">+ New</tab-button>
+    </header>
+
+    @if (billsQuery.value()?.length) {
+      <div class="bills-grid" data-testid="bills-grid">
+        @for (bill of billsQuery.value(); track bill.id) {
+          <tab-bill-card
+            data-testid="bill-card"
+            [name]="bill.name"
+            [meta]="bill.vendor ?? ''"
+            [badge]="badge(bill)"
+            [primaryValue]="bill.expectedAmount"
+            [splitValue]="share(bill)"
+            primaryAction="Mark paid in full"
+            secondaryAction="Log this month"
+            tertiaryAction="Edit"
+            (primaryClick)="markPaid(bill)"
+            (secondaryClick)="logThisMonth(bill)"
+            (tertiaryClick)="openEdit(bill)"
+          ></tab-bill-card>
+        }
+      </div>
+    } @else if (billsQuery.status() === 'success') {
+      <tab-empty data-testid="bills-empty">
+        <span slot="title">No recurring bills yet</span>
+        <span slot="meta">Define a bill once; their half posts every time you mark it paid.</span>
+      </tab-empty>
+    }
+
+    @if (editorOpen()) {
+      <div class="editor" role="dialog" aria-label="Bill" aria-modal="true">
+        <div class="editor__card">
+          <h2>{{ editing() ? 'Edit bill' : 'New bill' }}</h2>
+
+          <tab-input
+            label="Name"
+            [value]="draft().name"
+            (valueChange)="patchDraft('name', $event)"
+          ></tab-input>
+          <tab-input
+            label="Vendor"
+            [value]="draft().vendor"
+            (valueChange)="patchDraft('vendor', $event)"
+          ></tab-input>
+          <tab-input
+            label="Expected amount"
+            inputmode="decimal"
+            [value]="draft().expectedAmount"
+            (valueChange)="patchDraft('expectedAmount', $event)"
+          ></tab-input>
+          <tab-input
+            label="Due day"
+            inputmode="numeric"
+            [value]="draft().dueDay"
+            (valueChange)="patchDraft('dueDay', $event)"
+          ></tab-input>
+          <tab-input
+            label="Split percentage"
+            inputmode="numeric"
+            [value]="draft().splitPercent"
+            (valueChange)="patchDraft('splitPercent', $event)"
+          ></tab-input>
+
+          @if (error(); as message) {
+            <p class="editor__error" role="alert">{{ message }}</p>
+          }
+
+          <div class="editor__actions">
+            @if (editing()) {
+              <tab-button variant="ghost" (click)="archive()">Archive</tab-button>
+            }
+            <tab-button variant="ghost" (click)="close()">Cancel</tab-button>
+            <tab-button (click)="save()" [disabled]="busy()">Save</tab-button>
+          </div>
+        </div>
+      </div>
+    }
+  </main>
+
+  <tab-nav active="bills"></tab-nav>
+</tab-app-shell>

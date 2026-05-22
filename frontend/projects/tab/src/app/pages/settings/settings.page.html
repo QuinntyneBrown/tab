@@ -1,0 +1,101 @@
+<tab-app-shell data-ready>
+  <tab-header title="Settings"></tab-header>
+
+  <main>
+    <div class="settings">
+      <section data-testid="counterparty-section">
+        <tab-section-head title="Counterparty"></tab-section-head>
+        <tab-card>
+          <tab-input
+            label="Counterparty name"
+            [value]="name()"
+            (valueChange)="name.set($event)"
+          ></tab-input>
+          @if (counterpartyError(); as message) {
+            <p class="settings__error" role="alert">{{ message }}</p>
+          }
+          @if (counterpartySaved()) {
+            <p class="settings__saved" role="status" data-testid="counterparty-saved">Saved.</p>
+          }
+          <div class="settings__actions">
+            <tab-button (click)="saveCounterparty()">Save</tab-button>
+          </div>
+        </tab-card>
+      </section>
+
+      <section data-testid="preferences-section">
+        <tab-section-head title="Preferences"></tab-section-head>
+        <tab-card>
+          <label class="settings__field">
+            <span>Currency</span>
+            <select [value]="currency()" (change)="currency.set($any($event.target).value)">
+              <option value="CAD">CAD</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+            </select>
+          </label>
+
+          <tab-input
+            label="Default split %"
+            inputmode="numeric"
+            [value]="defaultSplit()"
+            (valueChange)="defaultSplit.set($event)"
+          ></tab-input>
+          <tab-input
+            label="Reminder lead (days)"
+            inputmode="numeric"
+            [value]="reminderLead()"
+            (valueChange)="reminderLead.set($event)"
+          ></tab-input>
+
+          <fieldset class="settings__tone">
+            <legend>Statement tone</legend>
+            <label>
+              <input
+                type="radio"
+                name="statement-tone"
+                value="Neutral"
+                checked
+                aria-label="Statement tone"
+              />
+              <span>Neutral</span>
+            </label>
+            <label class="disabled">
+              <input type="radio" name="statement-tone" value="Warm" disabled />
+              <span>Warm (coming soon)</span>
+            </label>
+          </fieldset>
+
+          @if (preferencesError(); as message) {
+            <p class="settings__error" role="alert">{{ message }}</p>
+          }
+          <div class="settings__actions">
+            <tab-button (click)="savePreferences()">Save</tab-button>
+          </div>
+        </tab-card>
+      </section>
+
+      <section>
+        <tab-section-head title="Data"></tab-section-head>
+        <tab-card>
+          <p class="muted">Download every entry as a CSV.</p>
+          <div class="settings__actions">
+            <tab-button variant="ghost" (click)="exportCsv()">Export all entries</tab-button>
+          </div>
+        </tab-card>
+      </section>
+
+      <section>
+        <tab-section-head title="Session"></tab-section-head>
+        <tab-card>
+          <div class="settings__actions">
+            <tab-button variant="ghost" (click)="signOut()">Sign out</tab-button>
+          </div>
+        </tab-card>
+      </section>
+    </div>
+  </main>
+
+  <tab-nav active="settings"></tab-nav>
+</tab-app-shell>

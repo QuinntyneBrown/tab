@@ -38,6 +38,7 @@ export interface TabSegment {
 export class SegmentedComponent implements ControlValueAccessor {
   @Input() segments: TabSegment[] = [];
   @Input() value = '';
+  @Input() ariaLabel: string | null = null;
   @Output() valueChange = new EventEmitter<string>();
 
   private cdr = inject(ChangeDetectorRef);

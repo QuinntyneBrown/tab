@@ -1,0 +1,44 @@
+<tab-app-shell noNav data-ready>
+  <tab-header title="Edit loan" back href="/loans"></tab-header>
+
+  <main class="no-nav">
+    <div class="edit">
+      <tab-input
+        label="Amount"
+        inputmode="decimal"
+        [value]="amount()"
+        (valueChange)="amount.set($event)"
+      ></tab-input>
+      <tab-input
+        label="Description"
+        [value]="description()"
+        (valueChange)="description.set($event)"
+      ></tab-input>
+      <tab-input
+        label="When"
+        type="date"
+        [value]="date()"
+        (valueChange)="date.set($event)"
+      ></tab-input>
+      <tab-input
+        label="Method"
+        [value]="method()"
+        (valueChange)="method.set($event)"
+      ></tab-input>
+      <tab-input
+        label="Note"
+        [value]="note()"
+        (valueChange)="note.set($event)"
+      ></tab-input>
+
+      @if (error(); as message) {
+        <p class="edit__error" role="alert">{{ message }}</p>
+      }
+
+      <div class="edit__actions">
+        <tab-button variant="ghost" (click)="remove()">Delete</tab-button>
+        <tab-button full (click)="save()" [disabled]="busy()">Save changes</tab-button>
+      </div>
+    </div>
+  </main>
+</tab-app-shell>

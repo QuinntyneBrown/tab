@@ -15,9 +15,6 @@ namespace Tab.Api;
 
 public static class TabServiceCollectionExtensions
 {
-    public const string TokenIpPolicy = "token-by-ip";
-    public const string TokenAccountPolicy = "token-by-account";
-
     public static IServiceCollection AddTabServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
     {
         services.AddControllers();
@@ -27,7 +24,9 @@ public static class TabServiceCollectionExtensions
         services.AddTabInfrastructure(configuration);
         services.AddTabAuthentication();
         services.AddAuthorization();
-        services.AddTabRateLimiting();
+        var ipLimit = configuration.GetValue<int?>("RateLimit:PerIpPermits") ?? 5;
+        var acctLimit = configuration.GetValue<int?>("RateLimit:PerAccountPermits") ?? 5;
+        services.AddTabRateLimiting(ipLimit, acctLimit);
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(c =>
         {
@@ -80,7 +79,7 @@ public static class TabServiceCollectionExtensions
         return services;
     }
 
-    private static IServiceCollection AddTabRateLimiting(this IServiceCollection services)
+    private static IServiceCollection AddTabRateLimiting(this IServiceCollection services, int ipPermits, int accountPermits)
     {
         services.AddRateLimiter(options =>
         {
@@ -91,35 +90,48 @@ public static class TabServiceCollectionExtensions
                 return ValueTask.CompletedTask;
             };
 
-            options.AddPolicy(TokenIpPolicy, http =>
+            var ipLimiter = PartitionedRateLimiter.Create<HttpContext, string>(http =>
             {
+                if (!IsTokenPath(http)) return RateLimitPartition.GetNoLimiter<string>("none");
                 var ip = http.Connection.RemoteIpAddress?.ToString() ?? "unknown";
-                return RateLimitPartition.GetFixedWindowLimiter(ip, _ => new FixedWindowRateLimiterOptions
+                return RateLimitPartition.GetFixedWindowLimiter($"ip:{ip}", _ => new FixedWindowRateLimiterOptions
                 {
-                    PermitLimit = 10,
+                    PermitLimit = ipPermits,
                     Window = TimeSpan.FromMinutes(5),
                     QueueLimit = 0
                 });
             });
 
-            options.AddPolicy(TokenAccountPolicy, http =>
+            var accountLimiter = PartitionedRateLimiter.Create<HttpContext, string>(http =>
             {
-                http.Request.EnableBuffering();
-                http.Request.Body.Position = 0;
-                using var reader = new StreamReader(http.Request.Body, leaveOpen: true);
-                var body = reader.ReadToEndAsync().GetAwaiter().GetResult();
-                http.Request.Body.Position = 0;
-                var email = ExtractEmail(body);
+                if (!IsTokenPath(http)) return RateLimitPartition.GetNoLimiter<string>("none");
+                var email = ExtractEmailFromBody(http);
                 var key = $"acct:{email.Trim().ToLowerInvariant()}";
                 return RateLimitPartition.GetFixedWindowLimiter(key, _ => new FixedWindowRateLimiterOptions
                 {
-                    PermitLimit = 5,
+                    PermitLimit = accountPermits,
                     Window = TimeSpan.FromMinutes(5),
                     QueueLimit = 0
                 });
             });
+
+            options.GlobalLimiter = PartitionedRateLimiter.CreateChained(ipLimiter, accountLimiter);
         });
         return services;
+    }
+
+    private static bool IsTokenPath(HttpContext http) =>
+        HttpMethods.IsPost(http.Request.Method)
+        && http.Request.Path.StartsWithSegments("/api/v1/oauth/token");
+
+    private static string ExtractEmailFromBody(HttpContext http)
+    {
+        http.Request.EnableBuffering();
+        if (http.Request.Body.CanSeek) http.Request.Body.Position = 0;
+        using var reader = new StreamReader(http.Request.Body, leaveOpen: true);
+        var body = reader.ReadToEndAsync().GetAwaiter().GetResult();
+        if (http.Request.Body.CanSeek) http.Request.Body.Position = 0;
+        return ExtractEmail(body);
     }
 
     private static string ExtractEmail(string body)
