@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#2E2E30" />
-  <title>tab — add entry</title>
+  <title>tab — add a loan</title>
   <link rel="stylesheet" href="assets/css/tokens.css" />
   <link rel="stylesheet" href="assets/css/base.css" />
   <script src="assets/js/components.js" defer></script>
@@ -85,33 +85,8 @@
       overflow-y: auto;
     }
 
-    .seg {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      background: var(--c-elevated);
-      border-radius: var(--r-pill);
-      padding: 4px;
-      gap: 2px;
-      margin-bottom: var(--s-6);
-    }
     .add-wrap { max-width: 480px; margin-inline: auto; }
-    .seg button {
-      font: inherit;
-      font-family: var(--font-sans);
-      font-weight: 600;
-      font-size: 13px;
-      background: transparent;
-      border: 0;
-      color: var(--c-muted);
-      padding: 10px 14px;
-      border-radius: var(--r-pill);
-      cursor: pointer;
-      transition: background var(--ease) 180ms, color var(--ease) 180ms;
-    }
-    .seg button[aria-selected="true"] {
-      background: var(--c-text-strong);
-      color: var(--c-bg);
-    }
+
     .amount-stage {
       text-align: center;
       padding: var(--s-7) 0 var(--s-5);
@@ -146,7 +121,7 @@
 <body>
   <div class="app" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
     <header class="dialog-head">
-      <h2 id="dialog-title">New entry</h2>
+      <h2 id="dialog-title">Add a loan</h2>
       <a class="close-btn" href="dashboard.html" aria-label="Close dialog">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6l-12 12"/></svg>
       </a>
@@ -154,12 +129,6 @@
 
     <main class="dialog-body">
       <div class="add-wrap">
-      <div class="seg" role="tablist">
-        <button role="tab" aria-selected="true">Loan</button>
-        <button role="tab" aria-selected="false">Bill payment</button>
-        <button role="tab" aria-selected="false">Payment in</button>
-      </div>
-
       <div class="amount-stage">
         <div class="label">Amount lent</div>
         <input class="amount-input" inputmode="decimal" placeholder="$0.00" value="$120.00" />
@@ -179,7 +148,7 @@
       </div>
 
       <div class="submit">
-        <tab-button full>Save entry</tab-button>
+        <tab-button full>Save loan</tab-button>
       </div>
       </div>
     </main>

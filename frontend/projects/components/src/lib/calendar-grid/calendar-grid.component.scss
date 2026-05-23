@@ -1,0 +1,154 @@
+/* Calendar month grid — mirrors docs/mocks/calendar.html.
+ * Class naming follows BEM (L2-038): block `cal-grid`, elements `cal-cell`,
+ * modifiers `--out` / `--today`. Chip block: `cal-chip` with modifiers per
+ * type. The grid uses `minmax(0, 1fr)` so cells shrink below content's
+ * min-content size (otherwise chip labels force the grid to overflow). */
+
+:host { display: contents; }
+
+/* ---------- Weekday header row ---------- */
+.cal-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 1px;
+  color: var(--c-muted);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: var(--s-2);
+
+  &__cell {
+    padding: var(--s-2) var(--s-3);
+    text-align: left;
+  }
+}
+
+/* ---------- Grid + cells ---------- */
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--c-hairline-strong);
+  border: 1px solid var(--c-hairline-strong);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+
+.cal-cell {
+  background: var(--c-bg);
+  min-height: 120px;
+  padding: var(--s-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  position: relative;
+  min-width: 0;
+
+  &--out {
+    background: color-mix(in srgb, var(--c-bg) 92%, #000 8%);
+  }
+  &--out .cal-cell__num {
+    color: var(--c-text-faint);
+  }
+
+  &__num {
+    font: 500 13px var(--font-num);
+    color: var(--c-text);
+    align-self: flex-start;
+  }
+
+  &--today .cal-cell__num {
+    color: var(--c-text-strong);
+    background: var(--c-elevated);
+    border-radius: var(--r-pill);
+    width: 26px;
+    height: 26px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    box-shadow: 0 0 0 1px var(--c-focus);
+  }
+
+  &__chips {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  &__more {
+    appearance: none;
+    align-self: flex-start;
+    font: 500 11px var(--font-sans);
+    color: var(--c-muted);
+    background: transparent;
+    border: 0;
+    padding: 2px 6px;
+    border-radius: var(--r-sm);
+    cursor: pointer;
+  }
+  &__more:hover {
+    background: var(--c-elevated);
+    color: var(--c-text);
+  }
+}
+
+/* ---------- Chips ---------- */
+.cal-chip {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: var(--r-sm);
+  font: 500 12px var(--font-sans);
+  color: var(--c-text-strong);
+  background: var(--c-surface);
+  border: 0;
+  border-left: 3px solid transparent;
+  text-align: left;
+  cursor: pointer;
+  min-width: 0;
+  width: 100%;
+
+  &__amt {
+    font: 600 13px var(--font-num);
+    color: var(--c-text-strong);
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    margin-left: auto;
+  }
+
+  &--loan    { border-left-color: #6FA8C9; }
+  &--bill    { border-left-color: #C9A66F; }
+  &--payment { border-left-color: #7FB07A; }
+  &--payment .cal-chip__amt { color: var(--c-muted); }
+
+  &--projected {
+    background: transparent;
+    border: 1px dashed color-mix(in srgb, #C9A66F 60%, transparent);
+    border-left-width: 3px;
+    border-left-style: dashed;
+    border-left-color: #C9A66F;
+    color: var(--c-muted);
+  }
+  &--projected .cal-chip__amt {
+    color: var(--c-text);
+    font-weight: 500;
+  }
+}
+
+/* Responsive cell heights from L2-057 AC2. */
+@media (min-width: 992px) {
+  .cal-cell { min-height: 120px; }
+}
+@media (min-width: 1200px) {
+  .cal-cell { min-height: 140px; }
+}
+@media (max-width: 767px) {
+  .cal-cell {
+    min-height: 96px;
+    padding: var(--s-2);
+  }
+}

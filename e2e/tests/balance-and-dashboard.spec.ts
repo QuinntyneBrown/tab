@@ -16,19 +16,19 @@ test.describe('L2-017 — Outstanding balance computation', () => {
 
   test('AC2: a new entry is reflected in the next dashboard load with no client recomputation', async ({
     signedInPage,
-    addEntryPage,
+    addLoanDialog,
     dashboardPage,
   }) => {
     await dashboardPage.goto();
     const before = await dashboardPage.heroAmount.textContent();
 
-    await addEntryPage.openFor('loan');
-    await addEntryPage.fillLoan({
+    await dashboardPage.addLoanButton.click();
+    await addLoanDialog.fill({
       amount: '10',
       description: 'Snack',
       date: '2026-05-20',
     });
-    await addEntryPage.save();
+    await addLoanDialog.save();
 
     await dashboardPage.goto();
     await expect(dashboardPage.heroAmount).not.toHaveText(before ?? '');
@@ -74,6 +74,7 @@ test.describe('L2-018 — Dashboard layout and content', () => {
     dashboardPage,
   }) => {
     await settingsPage.goto();
+    await settingsPage.openReminderLeadEditor();
     await settingsPage.reminderLeadInput.fill('1');
     await settingsPage.preferencesSave.click();
 

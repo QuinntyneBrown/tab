@@ -24,6 +24,12 @@ export const routes: Routes = [
       import('./pages/dashboard/dashboard.page').then((m) => m.DashboardPage),
   },
   {
+    path: 'calendar',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/calendar/calendar.page').then((m) => m.CalendarPage),
+  },
+  {
     path: 'loans',
     canActivate: [authGuard],
     loadComponent: () =>

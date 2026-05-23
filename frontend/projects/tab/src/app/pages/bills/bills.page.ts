@@ -1,3 +1,4 @@
+import { Dialog } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
@@ -11,7 +12,9 @@ import {
   ButtonComponent,
   EmptyComponent,
   InputComponent,
+  LogBillPaymentDialogResult,
   NavComponent,
+  openLogBillPaymentDialog,
 } from 'components';
 
 interface DraftBill {
@@ -40,6 +43,7 @@ interface DraftBill {
 })
 export class BillsPage {
   private readonly bills = inject(BILLS_SERVICE);
+  private readonly dialog = inject(Dialog);
   readonly billsQuery = this.bills.list();
 
   readonly editorOpen = signal(false);
@@ -127,21 +131,19 @@ export class BillsPage {
   }
 
   async logThisMonth(bill: RecurringBill): Promise<void> {
-    const raw = prompt(`Actual total this month for ${bill.name}?`, String(bill.expectedAmount));
-    if (raw === null) return;
-    const actual = Number(raw);
-    if (!Number.isFinite(actual) || actual <= 0) {
-      this.error.set('Enter a positive amount');
-      return;
-    }
-    const today = new Date().toISOString().slice(0, 10);
-    const period = today.slice(0, 7);
-    try {
-      await this.bills.logPayment(bill.id, { period, date: today, actualAmount: actual });
-      this.billsQuery.reload();
-    } catch (err) {
-      this.error.set(err instanceof ApiError ? err.problem.title : 'Could not log bill.');
-    }
+    const result = await openLogBillPaymentDialog(this.dialog, {
+      defaultDescription: bill.name,
+      defaultAmount: String(bill.expectedAmount),
+      submit: async (entry: LogBillPaymentDialogResult) => {
+        const period = entry.date.slice(0, 7);
+        await this.bills.logPayment(bill.id, {
+          period,
+          date: entry.date,
+          actualAmount: entry.amount,
+        });
+      },
+    });
+    if (result) this.billsQuery.reload();
   }
 
   async archive(): Promise<void> {

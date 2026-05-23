@@ -1,81 +1,159 @@
-<tab-app-shell data-ready>
-  <tab-header title="Settings"></tab-header>
+<tab-app-shell [attr.data-ready]="dataReady() ? '' : null">
+  <tab-header title="Settings" back href="/dashboard"></tab-header>
 
   <main>
     <div class="settings">
-      <section data-testid="counterparty-section">
-        <tab-section-head title="Counterparty"></tab-section-head>
-        <tab-card>
-          <tab-input
-            label="Counterparty name"
-            [value]="name()"
-            (valueChange)="name.set($event)"
-          ></tab-input>
-          @if (counterpartyError(); as message) {
-            <p class="settings__error" role="alert">{{ message }}</p>
+      <!-- People — mirrors docs/mocks/settings.html#People -->
+      <section class="settings__section" data-testid="people-section">
+        <h3 class="settings__section-title">People</h3>
+        <div class="settings__people">
+          <tab-card padding="sm">
+            <div class="settings__who-card" data-testid="people-you">
+              <tab-avatar [name]="userInitialName()" size="lg"></tab-avatar>
+              <div class="settings__who-meta">
+                <div class="settings__who-name">{{ userDisplayName() }}</div>
+                <div class="settings__who-sub">You · {{ userEmail() }}</div>
+              </div>
+            </div>
+          </tab-card>
+          <tab-card padding="sm">
+            <div class="settings__who-card" data-testid="people-counterparty">
+              <tab-avatar [name]="counterpartyName()" size="lg"></tab-avatar>
+              <div class="settings__who-meta">
+                <div class="settings__who-name">{{ counterpartyName() }}</div>
+                <div class="settings__who-sub">{{ counterpartyMeta() }}</div>
+              </div>
+              <tab-button
+                variant="quiet"
+                size="sm"
+                data-testid="counterparty-edit"
+                (click)="openEditor('counterparty')"
+              >Edit</tab-button>
+            </div>
+            @if (isEditing('counterparty')) {
+              <div class="settings__editor">
+                <tab-input
+                  label="Counterparty name"
+                  [value]="draftName()"
+                  (valueChange)="draftName.set($event)"
+                ></tab-input>
+                @if (counterpartyError(); as message) {
+                  <p class="settings__error" role="alert">{{ message }}</p>
+                }
+                <div class="settings__editor-actions">
+                  <tab-button variant="ghost" size="sm" (click)="cancelEdit()">Cancel</tab-button>
+                  <tab-button size="sm" (click)="saveCounterparty()">Save</tab-button>
+                </div>
+              </div>
+            }
+            @if (counterpartySaved()) {
+              <p class="settings__saved" role="status" data-testid="counterparty-saved">Saved.</p>
+            }
+          </tab-card>
+        </div>
+      </section>
+
+      <!-- Preferences — display rows; tap to edit inline -->
+      <section class="settings__section" data-testid="preferences-section">
+        <h3 class="settings__section-title">Preferences</h3>
+        <tab-card padding="sm">
+          <tab-row interactive (click)="openEditor('currency')">
+            <span slot="title">Currency</span>
+            <span slot="meta">Used across the app</span>
+            <span slot="trailing" class="settings__trailing">{{ currencyDisplay() }}</span>
+          </tab-row>
+          @if (isEditing('currency')) {
+            <div class="settings__editor">
+              <div class="settings__field">
+                <label class="settings__field-label" for="settings-currency">Currency</label>
+                <select
+                  id="settings-currency"
+                  class="settings__select"
+                  [value]="draftCurrency()"
+                  (change)="draftCurrency.set($any($event.target).value)"
+                >
+                  <option value="CAD">CAD</option>
+                  <option value="USD">USD</option>
+                  <option value="EUR">EUR</option>
+                  <option value="GBP">GBP</option>
+                </select>
+              </div>
+              @if (preferencesError(); as message) {
+                <p class="settings__error" role="alert">{{ message }}</p>
+              }
+              <div class="settings__editor-actions">
+                <tab-button variant="ghost" size="sm" (click)="cancelEdit()">Cancel</tab-button>
+                <tab-button size="sm" (click)="savePreferences()">Save</tab-button>
+              </div>
+            </div>
           }
-          @if (counterpartySaved()) {
-            <p class="settings__saved" role="status" data-testid="counterparty-saved">Saved.</p>
+
+          <tab-row interactive (click)="openEditor('split')">
+            <span slot="title">Default bill split</span>
+            <span slot="meta">Their share of shared bills</span>
+            <span slot="trailing" class="settings__trailing">{{ splitDisplay() }}</span>
+          </tab-row>
+          @if (isEditing('split')) {
+            <div class="settings__editor">
+              <tab-input
+                label="Default bill split %"
+                inputmode="numeric"
+                [value]="draftSplit()"
+                (valueChange)="draftSplit.set($event)"
+              ></tab-input>
+              @if (preferencesError(); as message) {
+                <p class="settings__error" role="alert">{{ message }}</p>
+              }
+              <div class="settings__editor-actions">
+                <tab-button variant="ghost" size="sm" (click)="cancelEdit()">Cancel</tab-button>
+                <tab-button size="sm" (click)="savePreferences()">Save</tab-button>
+              </div>
+            </div>
           }
-          <div class="settings__actions">
-            <tab-button (click)="saveCounterparty()">Save</tab-button>
-          </div>
-        </tab-card>
-      </section>
 
-      <section data-testid="preferences-section">
-        <tab-section-head title="Preferences"></tab-section-head>
-        <tab-card>
-          <label class="settings__field">
-            <span>Currency</span>
-            <select [value]="currency()" (change)="currency.set($any($event.target).value)">
-              <option value="CAD">CAD</option>
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-              <option value="GBP">GBP</option>
-            </select>
-          </label>
-
-          <tab-input
-            label="Default split %"
-            inputmode="numeric"
-            [value]="defaultSplit()"
-            (valueChange)="defaultSplit.set($event)"
-          ></tab-input>
-          <tab-input
-            label="Reminder lead (days)"
-            inputmode="numeric"
-            [value]="reminderLead()"
-            (valueChange)="reminderLead.set($event)"
-          ></tab-input>
-
-          @if (preferencesError(); as message) {
-            <p class="settings__error" role="alert">{{ message }}</p>
+          <tab-row interactive last (click)="openEditor('reminders')">
+            <span slot="title">Reminders</span>
+            <span slot="meta">Nudge before bills are due</span>
+            <span slot="trailing" class="settings__trailing">{{ remindersDisplay() }}</span>
+          </tab-row>
+          @if (isEditing('reminders')) {
+            <div class="settings__editor">
+              <tab-input
+                label="Reminder lead time (days)"
+                inputmode="numeric"
+                [value]="draftReminders()"
+                (valueChange)="draftReminders.set($event)"
+              ></tab-input>
+              @if (preferencesError(); as message) {
+                <p class="settings__error" role="alert">{{ message }}</p>
+              }
+              <div class="settings__editor-actions">
+                <tab-button variant="ghost" size="sm" (click)="cancelEdit()">Cancel</tab-button>
+                <tab-button size="sm" (click)="savePreferences()">Save</tab-button>
+              </div>
+            </div>
           }
-          <div class="settings__actions">
-            <tab-button (click)="savePreferences()">Save</tab-button>
-          </div>
         </tab-card>
       </section>
 
-      <section>
-        <tab-section-head title="Data"></tab-section-head>
-        <tab-card>
-          <p class="muted">Download every entry as a CSV.</p>
-          <div class="settings__actions">
-            <tab-button variant="ghost" (click)="exportCsv()">Export all entries</tab-button>
-          </div>
+      <!-- Data — action rows -->
+      <section class="settings__section" data-testid="data-section">
+        <h3 class="settings__section-title">Data</h3>
+        <tab-card padding="sm">
+          <tab-row interactive (click)="exportCsv()" data-testid="data-export">
+            <span slot="title">Export all entries</span>
+            <span slot="meta">CSV · for your records</span>
+          </tab-row>
+          <tab-row interactive last (click)="shareStatement()" data-testid="data-share">
+            <span slot="title">Share a statement</span>
+            <span slot="meta">Read-only link</span>
+          </tab-row>
         </tab-card>
       </section>
 
-      <section>
-        <tab-section-head title="Session"></tab-section-head>
-        <tab-card>
-          <div class="settings__actions">
-            <tab-button variant="ghost" (click)="signOut()">Sign out</tab-button>
-          </div>
-        </tab-card>
-      </section>
+      <div class="settings__signout">
+        <tab-button full variant="ghost" (click)="signOut()">Sign out</tab-button>
+      </div>
     </div>
   </main>
 

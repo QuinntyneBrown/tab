@@ -20,11 +20,22 @@ export * from './lib/nav/nav.component';
 export * from './lib/row/row.component';
 
 /* Composition components recurring across screens */
-export * from './lib/add-entry-dialog/add-entry-dialog.component';
+export * from './lib/add-loan-dialog/add-loan-dialog.component';
+export * from './lib/log-bill-payment-dialog/log-bill-payment-dialog.component';
+export * from './lib/record-payment-dialog/record-payment-dialog.component';
 export * from './lib/amount-input/amount-input.component';
 export * from './lib/app-shell/app-shell.component';
 export * from './lib/bill-card/bill-card.component';
 export * from './lib/brand/brand.component';
+export * from './lib/calendar-agenda/calendar-agenda.component';
+export * from './lib/calendar-agenda/agenda-day.interface';
+export * from './lib/calendar-agenda/agenda-row.interface';
+export * from './lib/calendar-agenda/agenda-row-activated.event';
+export * from './lib/calendar-agenda/agenda-filter.type';
+export * from './lib/calendar-grid/calendar-grid.component';
+export * from './lib/calendar-grid/calendar-cell.interface';
+export * from './lib/calendar-grid/calendar-chip.interface';
+export * from './lib/calendar-grid/calendar-chip-activated.event';
 export * from './lib/eyebrow/eyebrow.component';
 export * from './lib/icon/icon.component';
 export * from './lib/ledger/ledger.component';

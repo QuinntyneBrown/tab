@@ -1,8 +1,9 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { DASHBOARD_SERVICE, LOANS_SERVICE, LedgerEntry, ME_SERVICE, PAYMENTS_SERVICE } from 'api';
 import {
-  AddEntryDialogResult,
+  AddLoanDialogResult,
   AmountComponent,
   AppShellComponent,
   AvatarComponent,
@@ -13,9 +14,11 @@ import {
   EyebrowComponent,
   NavComponent,
   NudgeComponent,
+  RecordPaymentDialogResult,
   RowComponent,
   SectionHeadComponent,
-  openAddEntryDialog,
+  openAddLoanDialog,
+  openRecordPaymentDialog,
 } from 'components';
 
 @Component({
@@ -41,6 +44,7 @@ import {
 })
 export class DashboardPage {
   private readonly dialog = inject(Dialog);
+  private readonly router = inject(Router);
   private readonly loans = inject(LOANS_SERVICE);
   private readonly payments = inject(PAYMENTS_SERVICE);
   private readonly dashboardService = inject(DASHBOARD_SERVICE);
@@ -73,25 +77,35 @@ export class DashboardPage {
     return `Counterparty owes ${fmt.format(amount)}`;
   }
 
-  async openAddEntry(mode: 'loan' | 'bill'): Promise<void> {
-    const result = await openAddEntryDialog(this.dialog, {
-      mode,
-      submit: async (entry: AddEntryDialogResult) => {
-        if (entry.mode === 'payment') {
-          await this.payments.create({
-            amount: entry.amount,
-            date: entry.date,
-            method: entry.method,
-          });
-        } else {
-          await this.loans.create({
-            amount: entry.amount,
-            description: entry.description,
-            date: entry.date,
-            method: entry.method,
-            note: entry.note,
-          });
-        }
+  async openAddLoan(): Promise<void> {
+    const result = await openAddLoanDialog(this.dialog, {
+      submit: async (entry: AddLoanDialogResult) => {
+        await this.loans.create({
+          amount: entry.amount,
+          description: entry.description,
+          date: entry.date,
+          method: entry.method,
+          note: entry.note,
+        });
+      },
+    });
+    if (result) this.dashboard.reload();
+  }
+
+  async openLogBill(): Promise<void> {
+    // Dashboard shortcut into the bills page; the actual log-payment flow is
+    // bill-card scoped under /bills (uses LogBillPaymentDialog).
+    await this.router.navigateByUrl('/bills');
+  }
+
+  async openRecordPayment(): Promise<void> {
+    const result = await openRecordPaymentDialog(this.dialog, {
+      submit: async (entry: RecordPaymentDialogResult) => {
+        await this.payments.create({
+          amount: entry.amount,
+          date: entry.date,
+          method: entry.method,
+        });
       },
     });
     if (result) this.dashboard.reload();

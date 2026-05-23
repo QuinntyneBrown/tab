@@ -4,35 +4,147 @@
   padding: var(--s-5) var(--content-pad) var(--s-9);
   display: flex;
   flex-direction: column;
-  gap: var(--s-6);
+
+  /* ---------- Sections — mirror docs/mocks/settings.html .section ---------- */
+  &__section {
+    margin-top: var(--s-6);
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  &__section-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--c-muted);
+    font-weight: 600;
+    margin: 0 0 var(--s-3) var(--s-2);
+  }
+
+  /* ---------- People grid (1-col mobile, 2-col tablet+) ---------- */
+  &__people {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--s-3);
+  }
+  @media (min-width: 760px) {
+    &__people {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s-4);
+    }
+  }
+
+  &__who-card {
+    display: flex;
+    align-items: center;
+    gap: var(--s-4);
+    padding: var(--s-2) 0;
+  }
+
+  &__who-meta {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__who-name {
+    color: var(--c-text-strong);
+    font-weight: 600;
+    font-size: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__who-sub {
+    color: var(--c-muted);
+    font-size: 13px;
+    margin-top: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* ---------- Trailing text in tab-row (used in Preferences) ---------- */
+  &__trailing {
+    color: var(--c-muted);
+  }
+
+  /* ---------- Inline editor opened by tapping a row / Edit button ---------- */
+  &__editor {
+    padding: var(--s-3) var(--s-4) var(--s-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    border-top: 1px solid var(--c-hairline);
+    margin-top: var(--s-2);
+  }
+
+  &__editor-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--s-2);
+  }
 
   &__field {
     display: flex;
     flex-direction: column;
-    gap: var(--s-2);
-    font-size: 13px;
-    color: var(--c-muted);
+    gap: 8px;
+  }
 
-    select {
-      padding: 12px 14px;
-      background: var(--c-elevated);
-      color: var(--c-text-strong);
-      border: 1px solid var(--c-hairline);
-      border-radius: 12px;
-      font: inherit;
+  &__field-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--c-muted);
+    font-weight: 600;
+  }
+
+  &__select {
+    appearance: none;
+    width: 100%;
+    padding: 14px 16px;
+    background: var(--c-elevated);
+    color: var(--c-text-strong);
+    border: 1px solid transparent;
+    border-radius: 12px;
+    font-family: var(--font-sans);
+    font-size: 16px;
+    cursor: pointer;
+    /* Custom chevron (CSS-only) so the select matches the tab-input visual. */
+    background-image: linear-gradient(45deg, transparent 50%, var(--c-muted) 50%),
+                      linear-gradient(135deg, var(--c-muted) 50%, transparent 50%);
+    background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 36px;
+    transition: border-color var(--ease) 160ms, background-color var(--ease) 160ms;
+
+    &:focus {
+      outline: none;
+      border-color: var(--c-focus);
+      background-color: var(--c-surface);
     }
   }
 
   &__error {
     color: var(--c-danger, #ff6b6b);
-    margin: var(--s-3) 0 0;
+    margin: 0;
     font-size: 13px;
   }
 
-  &__actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: var(--s-4);
+  &__saved {
+    color: var(--c-text);
+    margin: var(--s-2) 0 0;
+    font-size: 13px;
+    padding: 0 var(--s-4) var(--s-3);
+  }
+
+  /* ---------- Sign-out — capped 320px per mock ---------- */
+  &__signout {
+    margin-top: var(--s-7);
+    max-width: 320px;
   }
 }
 

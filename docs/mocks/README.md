@@ -48,7 +48,9 @@ CSS lives in `assets/css/`: `tokens.css` (palette, type, spacing), `base.css` (r
 | `dashboard.html` | Hero balance, recent activity, quick actions |
 | `loans.html` | All loans, grouped by month |
 | `bills.html` | Recurring shared bills, next-due dates |
-| `add.html` | Add loan or bill payment (single sheet, switchable) |
+| `add-loan.html` | Add a loan (task-specific dialog) |
+| `add-bill.html` | Log a bill payment (task-specific dialog) |
+| `add-payment.html` | Record a payment-in (task-specific dialog) |
 | `statement.html` | Read-only shareable summary |
 | `settings.html` | Counterparty name, currency, sign-out |
 

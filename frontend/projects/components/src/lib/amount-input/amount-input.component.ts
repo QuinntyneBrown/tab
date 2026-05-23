@@ -2,11 +2,13 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   forwardRef,
   inject,
   Input,
   Output,
+  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -43,9 +45,17 @@ export class AmountInputComponent implements ControlValueAccessor {
   @Output() valueChange = new EventEmitter<string>();
   @Output() chipApplied = new EventEmitter<number>();
 
+  @ViewChild('input', { static: false })
+  private readonly input?: ElementRef<HTMLInputElement>;
+
   private cdr = inject(ChangeDetectorRef);
   private onChange: (v: string) => void = () => {};
   private onTouched: () => void = () => {};
+
+  /** Move keyboard focus to the underlying input. */
+  focus(): void {
+    this.input?.nativeElement?.focus();
+  }
 
   onInput(e: Event): void {
     this.value = (e.target as HTMLInputElement).value;

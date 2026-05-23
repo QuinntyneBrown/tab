@@ -141,18 +141,40 @@ test.describe('L2-013 — Mark bill paid in full → automatic counterparty post
     signedInPage,
     billsPage,
     loansPage,
+    logBillPaymentDialog,
   }) => {
     await billsPage.goto();
     const card = billsPage.card(/hydro/i);
     await billsPage.logThisMonth(card).click();
-    await signedInPage.getByLabel(/actual amount/i).fill('156.84');
-    await signedInPage.getByRole('button', { name: /^save$/i }).click();
+
+    await expect(logBillPaymentDialog.dialog).toBeVisible();
+    await logBillPaymentDialog.fill({ amount: '156.84' });
+    await logBillPaymentDialog.save();
 
     await loansPage.goto();
     await expect(loansPage.ledgerRow(/hydro/i).first()).toContainText(/78\.42/);
 
     await billsPage.goto();
     await expect(billsPage.card(/hydro/i)).toContainText(/\$168/);
+  });
+
+  test('AC4: "Log this month" opens a single-purpose dialog with correct title, labels and no tablist', async ({
+    signedInPage,
+    billsPage,
+    logBillPaymentDialog,
+  }) => {
+    await billsPage.goto();
+    const card = billsPage.card(/hydro/i);
+    await billsPage.logThisMonth(card).click();
+
+    await expect(logBillPaymentDialog.dialog).toBeVisible();
+    await expect(logBillPaymentDialog.title).toBeVisible();
+    await expect(logBillPaymentDialog.amountLabel).toHaveText(/amount paid/i);
+    await expect(logBillPaymentDialog.saveButton).toBeVisible();
+    await expect(logBillPaymentDialog.noteInput).toHaveCount(0);
+    await expect(
+      signedInPage.getByRole('tablist', { name: /entry type/i }),
+    ).toHaveCount(0);
   });
 });
 

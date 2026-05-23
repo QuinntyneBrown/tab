@@ -16,3 +16,12 @@ appsettings.Production.json
 *.pfx
 *.key
 *.pub
+
+# Runtime SQLite database used by `./backend/build.ps1 e2e` (regenerated each run)
+tab-e2e.db
+tab-e2e.db-shm
+tab-e2e.db-wal
+
+# Local Claude config (per-user)
+.claude/
+artifacts/

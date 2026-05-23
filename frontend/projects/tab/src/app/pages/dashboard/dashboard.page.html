@@ -32,14 +32,20 @@
             full
             variant="ghost"
             data-testid="dashboard-add-loan"
-            (click)="openAddEntry('loan')"
+            (click)="openAddLoan()"
           >Add a loan</tab-button>
           <tab-button
             full
             variant="ghost"
-            data-testid="dashboard-add-bill"
-            (click)="openAddEntry('bill')"
+            data-testid="dashboard-log-bill"
+            (click)="openLogBill()"
           >Log a bill</tab-button>
+          <tab-button
+            full
+            variant="ghost"
+            data-testid="dashboard-record-payment"
+            (click)="openRecordPayment()"
+          >Record a payment</tab-button>
         </div>
       </tab-card>
 

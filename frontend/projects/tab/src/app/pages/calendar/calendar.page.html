@@ -1,0 +1,110 @@
+<tab-app-shell [attr.data-ready]="dataReady() ? '' : null">
+  <tab-header title="Calendar" back href="/dashboard">
+    <tab-button slot="action" variant="quiet" size="sm">＋ Add</tab-button>
+  </tab-header>
+
+  <main>
+    @if (isAgendaView()) {
+      <p class="cal-lede">
+        Every entry, in order. Past loans and payments, today, and the next
+        recurring bills you can expect to post.
+      </p>
+    } @else {
+      <p class="cal-lede">
+        Everything on one calendar — loans you've issued, payments
+        {{ counterpartyFirstName() }} has sent back, and recurring bills
+        (already paid or coming up).
+      </p>
+    }
+
+    <div class="cal-toolbar">
+      <div class="cal-toolbar__nav">
+        <button
+          type="button"
+          class="cal-toolbar__icon"
+          aria-label="Previous month"
+          (click)="navigatePrevMonth()"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" />
+          </svg>
+        </button>
+        <span class="cal-toolbar__month" data-testid="calendar-month-label">{{ monthLabel() }}</span>
+        <button
+          type="button"
+          class="cal-toolbar__icon"
+          aria-label="Next month"
+          (click)="navigateNextMonth()"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          class="cal-toolbar__today"
+          (click)="navigateToday()"
+        >Today</button>
+      </div>
+      <div class="cal-toolbar__views">
+        <div class="cal-toolbar__seg" role="tablist" aria-label="View">
+          <button
+            type="button"
+            role="tab"
+            [class.cal-toolbar__seg--active]="view() === 'month'"
+            [attr.aria-selected]="view() === 'month'"
+            (click)="setView('month')"
+          >Month</button>
+          <button
+            type="button"
+            role="tab"
+            [class.cal-toolbar__seg--active]="view() === 'agenda'"
+            [attr.aria-selected]="view() === 'agenda'"
+            (click)="setView('agenda')"
+          >Agenda</button>
+        </div>
+      </div>
+    </div>
+
+    @if (isEmpty()) {
+      <div class="cal-empty" data-testid="calendar-empty" role="status">
+        No activity yet — add a loan, log a bill, or define a recurring bill to see it here.
+      </div>
+    }
+
+    @if (isAgendaView()) {
+      <div class="cal-summary" aria-label="{{ monthLabel() }} summary">
+        <div class="cal-summary__stat">
+          <span class="cal-summary__label">Lent</span>
+          <span class="cal-summary__value">{{ formatSummaryAmount(summary().lent) }}</span>
+        </div>
+        <div class="cal-summary__stat">
+          <span class="cal-summary__label">Bills (their half)</span>
+          <span class="cal-summary__value">{{ formatSummaryAmount(summary().bills) }}</span>
+        </div>
+        <div class="cal-summary__stat">
+          <span class="cal-summary__label">Paid back</span>
+          <span class="cal-summary__value cal-summary__value--neg">{{ formatSummaryAmount(summary().paidBack, { negative: true }) }}</span>
+        </div>
+        <div class="cal-summary__stat">
+          <span class="cal-summary__label">Net change</span>
+          <span class="cal-summary__value">{{ formatSummaryAmount(summary().netChange, { signed: true }) }}</span>
+        </div>
+      </div>
+      <tab-calendar-agenda
+        [days]="agendaDays()"
+        (rowActivated)="onAgendaRowActivated($event)"
+      ></tab-calendar-agenda>
+    } @else {
+      <tab-calendar-grid
+        [weekdays]="weekdays"
+        [cells]="cells()"
+        [ariaLabel]="monthLabel()"
+        (chipActivated)="onChipActivated($event)"
+        (moreActivated)="onMoreActivated($event)"
+      ></tab-calendar-grid>
+    }
+  </main>
+
+  <tab-nav active="calendar"></tab-nav>
+</tab-app-shell>

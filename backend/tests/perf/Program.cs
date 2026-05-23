@@ -1,7 +1,8 @@
-// Performance smoke (L2-026).
-// Traces to: L2-026, L2-027
-// Description: Hammers /api/v1/dashboard and /api/v1/loans?month=YYYY-MM after seeding 10k entries.
-// Asserts p95 ≤ 300 ms for both. Run via `./backend/build.ps1 perf` (requires the API + DB running).
+// Performance smoke (L2-026 / L2-058).
+// Traces to: L2-026, L2-027, L2-058
+// Description: Hammers /api/v1/dashboard, /api/v1/loans?month=YYYY-MM, and
+// /api/v1/calendar?from=&to= after seeding 10k entries. Asserts p95 ≤ 300 ms.
+// Run via `./backend/build.ps1 perf` (requires the API + DB running).
 
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -39,8 +40,20 @@ var loansScenario = Scenario.Create("loans_p95", async _ =>
     .WithoutWarmUp()
     .WithLoadSimulations(Simulation.KeepConstant(copies: 1, during: TimeSpan.FromSeconds(30)));
 
+var calendarScenario = Scenario.Create("calendar_p95", async _ =>
+    {
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var from = new DateOnly(today.Year, today.Month, 1);
+        var to = from.AddMonths(1).AddDays(-1);
+        var req = Http.CreateRequest("GET", $"{apiBase}/api/v1/calendar?from={from:yyyy-MM-dd}&to={to:yyyy-MM-dd}")
+            .WithHeader("Authorization", $"Bearer {token}");
+        return await Http.Send(http, req);
+    })
+    .WithoutWarmUp()
+    .WithLoadSimulations(Simulation.KeepConstant(copies: 1, during: TimeSpan.FromSeconds(30)));
+
 var stats = NBomberRunner
-    .RegisterScenarios(dashboardScenario, loansScenario)
+    .RegisterScenarios(dashboardScenario, loansScenario, calendarScenario)
     .Run();
 
 var failed = false;

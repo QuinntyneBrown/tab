@@ -18,7 +18,7 @@ export class LoansPage extends BasePage {
     this.monthGroups = page.getByTestId('month-group');
     this.filterTabs = page.getByRole('tablist', { name: /filter/i });
     this.emptyState = page.getByTestId('ledger-empty');
-    this.addLoanCta = page.getByRole('link', { name: /add a loan/i });
+    this.addLoanCta = page.getByTestId('ledger-add-loan');
   }
 
   filter(label: LedgerFilter): Locator {

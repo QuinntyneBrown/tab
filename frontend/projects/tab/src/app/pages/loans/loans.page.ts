@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { Router } from '@angular/router';
 import { LOANS_SERVICE, LedgerEntry, LedgerEntryType, PAYMENTS_SERVICE } from 'api';
 import {
-  AddEntryDialogResult,
+  AddLoanDialogResult,
   AmountComponent,
   AppShellComponent,
   AvatarComponent,
@@ -13,7 +13,7 @@ import {
   RowComponent,
   SegmentedComponent,
   TabSegment,
-  openAddEntryDialog,
+  openAddLoanDialog,
 } from 'components';
 
 type Filter = 'all' | LedgerEntryType;
@@ -105,25 +105,16 @@ export class LoansPage {
     if (entry.type === 'loan') this.router.navigate(['/loans', entry.id, 'edit']);
   }
 
-  async openAddEntry(mode: 'loan' | 'bill'): Promise<void> {
-    const result = await openAddEntryDialog(this.dialog, {
-      mode,
-      submit: async (entry: AddEntryDialogResult) => {
-        if (entry.mode === 'payment') {
-          await this.payments.create({
-            amount: entry.amount,
-            date: entry.date,
-            method: entry.method,
-          });
-        } else {
-          await this.loans.create({
-            amount: entry.amount,
-            description: entry.description,
-            date: entry.date,
-            method: entry.method,
-            note: entry.note,
-          });
-        }
+  async openAddLoan(): Promise<void> {
+    const result = await openAddLoanDialog(this.dialog, {
+      submit: async (entry: AddLoanDialogResult) => {
+        await this.loans.create({
+          amount: entry.amount,
+          description: entry.description,
+          date: entry.date,
+          method: entry.method,
+          note: entry.note,
+        });
       },
     });
     if (result) this.ledger.reload();

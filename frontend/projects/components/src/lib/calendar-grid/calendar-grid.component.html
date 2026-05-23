@@ -1,0 +1,61 @@
+<div class="cal-weekdays" data-testid="calendar-weekdays" aria-hidden="true">
+  @for (d of weekdays; track d) {
+    <span class="cal-weekdays__cell">{{ d }}</span>
+  }
+</div>
+
+<section
+  class="cal-grid"
+  data-testid="calendar-month-grid"
+  role="grid"
+  [attr.aria-label]="ariaLabel"
+>
+  @for (cell of cells; track cell.iso) {
+    <div
+      class="cal-cell"
+      [class.cal-cell--out]="!cell.inMonth"
+      [class.cal-cell--today]="cell.isToday"
+      [attr.data-date]="cell.iso"
+      [attr.data-today]="cell.isToday ? 'true' : null"
+      [attr.aria-current]="cell.isToday ? 'date' : null"
+      role="gridcell"
+    >
+      <span class="cal-cell__num">{{ cell.day }}</span>
+      @if (cell.chips.length) {
+        <div class="cal-cell__chips">
+          @for (chip of visibleChips(cell); track chip.id) {
+            <button
+              type="button"
+              class="cal-chip"
+              [class.cal-chip--loan]="chip.kind === 'loan'"
+              [class.cal-chip--bill]="chip.kind === 'bill'"
+              [class.cal-chip--payment]="chip.kind === 'payment'"
+              [class.cal-chip--projected]="chip.kind === 'projected'"
+              [attr.data-testid]="'calendar-chip'"
+              [attr.data-chip-type]="chip.kind"
+              [attr.data-chip-id]="chip.id"
+              [attr.title]="chip.tooltip"
+              [attr.aria-label]="chip.ariaLabel"
+              (click)="onChipClick(cell, chip)"
+            >
+              <span class="cal-chip__amt">{{ formatAmount(chip.amount) }}</span>
+            </button>
+          }
+          @if (hiddenChipCount(cell) > 0) {
+            <button
+              type="button"
+              class="cal-cell__more"
+              data-testid="calendar-chip-more"
+              [attr.aria-label]="
+                'Show ' + hiddenChipCount(cell) + ' more entr' + (hiddenChipCount(cell) === 1 ? 'y' : 'ies') + ' on ' + cell.iso
+              "
+              (click)="onMoreClick(cell)"
+            >
+              +{{ hiddenChipCount(cell) }} more
+            </button>
+          }
+        </div>
+      }
+    </div>
+  }
+</section>

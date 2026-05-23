@@ -155,6 +155,9 @@ class TabInput extends HTMLElement {
         font-family: var(--font-sans);
         font-size: 16px;
         min-width: 0;
+        /* Render native form-control affordances (date picker icon, spinner,
+         * etc.) against a dark background so they don't appear in black. */
+        color-scheme: dark;
       }
       input::placeholder { color: var(--c-text-faint); }
       :host([type="number"]) input,

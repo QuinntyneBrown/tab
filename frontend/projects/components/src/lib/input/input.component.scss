@@ -45,6 +45,9 @@
   font-family: var(--font-sans);
   font-size: 16px;
   min-width: 0;
+  /* Tell the UA to render native form-control affordances (date picker icon,
+   * spinner, etc.) against a dark background so they don't render in black. */
+  color-scheme: dark;
 }
 .input__control::placeholder {
   color: var(--c-text-faint);

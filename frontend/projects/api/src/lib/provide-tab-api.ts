@@ -3,6 +3,7 @@ import { EnvironmentProviders, Provider, makeEnvironmentProviders } from '@angul
 import { provideAuthService } from './auth/provide-auth-service';
 import { provideBalanceService } from './balance/provide-balance-service';
 import { provideBillsService } from './bills/provide-bills-service';
+import { provideCalendarService } from './calendar/provide-calendar-service';
 import { API_BASE_URL } from './common/api-base-url.token';
 import { provideCounterpartyService } from './counterparty/provide-counterparty-service';
 import { provideDashboardService } from './dashboard/provide-dashboard-service';
@@ -40,6 +41,7 @@ export function provideTabApi(config: TabApiConfig): EnvironmentProviders {
     ...provideCounterpartyService(),
     ...provideBalanceService(),
     ...provideDashboardService(),
+    ...provideCalendarService(),
     ...provideLoansService(),
     ...provideBillsService(),
     ...providePaymentsService(),

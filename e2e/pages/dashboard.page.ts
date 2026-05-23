@@ -10,6 +10,7 @@ export class DashboardPage extends BasePage {
   readonly heroMeta: Locator;
   readonly addLoanButton: Locator;
   readonly logBillButton: Locator;
+  readonly recordPaymentButton: Locator;
   readonly nudge: Locator;
   readonly recentActivity: Locator;
   readonly recentActivityRows: Locator;
@@ -26,8 +27,9 @@ export class DashboardPage extends BasePage {
     this.heroEyebrow = this.heroCard.getByTestId('hero-eyebrow');
     this.heroAmount = this.heroCard.getByTestId('hero-amount');
     this.heroMeta = this.heroCard.getByTestId('hero-meta');
-    this.addLoanButton = page.getByRole('link', { name: /add a loan/i });
-    this.logBillButton = page.getByRole('link', { name: /log a bill/i });
+    this.addLoanButton = page.getByTestId('dashboard-add-loan');
+    this.logBillButton = page.getByTestId('dashboard-log-bill');
+    this.recordPaymentButton = page.getByTestId('dashboard-record-payment');
     this.nudge = page.getByTestId('dashboard-nudge');
     this.recentActivity = page.getByTestId('recent-activity');
     this.recentActivityRows = this.recentActivity.getByRole('listitem');

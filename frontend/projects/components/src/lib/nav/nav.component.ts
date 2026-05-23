@@ -10,7 +10,7 @@ import {
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 
-export type TabNavKey = 'dashboard' | 'loans' | 'bills' | 'settings';
+export type TabNavKey = 'dashboard' | 'calendar' | 'loans' | 'bills' | 'settings';
 
 export interface TabNavItem {
   key: TabNavKey;
@@ -45,6 +45,14 @@ export class NavComponent {
       label: 'Home',
       href: '/dashboard',
       iconPaths: '<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>',
+    },
+    {
+      key: 'calendar',
+      label: 'Calendar',
+      href: '/calendar',
+      iconPaths:
+        '<rect x="3" y="5" width="18" height="16" rx="2"/>' +
+        '<path d="M3 9h18"/><path d="M8 3v4M16 3v4"/>',
     },
     {
       key: 'loans',

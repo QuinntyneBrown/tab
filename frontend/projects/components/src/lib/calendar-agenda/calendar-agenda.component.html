@@ -1,0 +1,82 @@
+<div class="cal-agenda" data-testid="calendar-agenda">
+  <div class="cal-agenda__filters" role="toolbar" aria-label="Filter entries">
+    <button
+      type="button"
+      class="cal-agenda__pill"
+      [class.cal-agenda__pill--on]="isFilter('all')"
+      (click)="setFilter('all')"
+    >All</button>
+    <button
+      type="button"
+      class="cal-agenda__pill"
+      [class.cal-agenda__pill--on]="isFilter('loan')"
+      (click)="setFilter('loan')"
+    >
+      <span class="cal-agenda__dot cal-agenda__dot--loan" aria-hidden="true"></span>Loans
+    </button>
+    <button
+      type="button"
+      class="cal-agenda__pill"
+      [class.cal-agenda__pill--on]="isFilter('bill')"
+      (click)="setFilter('bill')"
+    >
+      <span class="cal-agenda__dot cal-agenda__dot--bill" aria-hidden="true"></span>Bills
+    </button>
+    <button
+      type="button"
+      class="cal-agenda__pill"
+      [class.cal-agenda__pill--on]="isFilter('payment')"
+      (click)="setFilter('payment')"
+    >
+      <span class="cal-agenda__dot cal-agenda__dot--payment" aria-hidden="true"></span>Payments
+    </button>
+  </div>
+
+  @for (day of visibleDays(); track day.iso) {
+    <div
+      class="cal-agenda__day"
+      [class.cal-agenda__day--today]="day.isToday"
+      [attr.data-date]="day.iso"
+    >
+      <div class="cal-agenda__head">
+        <span class="cal-agenda__dow">{{ day.weekday }}</span>
+        <span class="cal-agenda__dnum">{{ day.day }}</span>
+        <span class="cal-agenda__mon">{{ day.month }}</span>
+        @if (day.isToday) {
+          <span class="cal-agenda__badge">Today</span>
+        }
+        @if (day.isProjected) {
+          <span class="cal-agenda__badge cal-agenda__badge--projected">Projected</span>
+        }
+      </div>
+      <div class="cal-agenda__body">
+        @for (row of day.rows; track row.id) {
+          <button
+            type="button"
+            class="cal-agenda__row"
+            [class.cal-agenda__row--loan]="row.kind === 'loan'"
+            [class.cal-agenda__row--bill]="row.kind === 'bill'"
+            [class.cal-agenda__row--payment]="row.kind === 'payment'"
+            [class.cal-agenda__row--projected]="row.kind === 'projected'"
+            data-testid="agenda-row"
+            [attr.data-row-kind]="row.kind"
+            [attr.aria-label]="row.ariaLabel"
+            (click)="onRowClick(day, row)"
+          >
+            <span class="cal-agenda__row-stripe" aria-hidden="true"></span>
+            <span class="cal-agenda__row-main">
+              <span class="cal-agenda__row-title">{{ row.title }}</span>
+              <span class="cal-agenda__row-meta">
+                <span class="cal-agenda__row-pill">{{ row.pill }}</span>
+                @if (row.meta) {
+                  <span class="cal-agenda__row-meta-trailing">{{ row.meta }}</span>
+                }
+              </span>
+            </span>
+            <span class="cal-agenda__row-amount">{{ formatAmount(row.amount, row.kind) }}</span>
+          </button>
+        }
+      </div>
+    </div>
+  }
+</div>

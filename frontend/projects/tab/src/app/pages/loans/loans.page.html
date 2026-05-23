@@ -50,6 +50,7 @@
                   <span slot="meta">{{ entry.date }} · {{ entry.type }}</span>
                   <tab-amount
                     slot="trailing"
+                    data-testid="amount"
                     [value]="entry.counterpartyShare"
                     [muted]="entry.type === 'payment'"
                     [sign]="entry.type === 'payment' ? '−' : null"
@@ -69,7 +70,7 @@
           type="button"
           class="ledger-empty__cta"
           data-testid="ledger-add-loan"
-          (click)="openAddEntry('loan')"
+          (click)="openAddLoan()"
         >Add a loan</button>
       </tab-empty>
     }

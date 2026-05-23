@@ -14,7 +14,17 @@ const baselinesDir = join(__dirname, 'baselines');
 
 import { viewports } from '../fixtures/viewports';
 
-const pages = ['login', 'dashboard', 'loans', 'bills', 'statement', 'settings', 'add'] as const;
+const pages = [
+  'login',
+  'dashboard',
+  'loans',
+  'bills',
+  'calendar',
+  'calendar-agenda',
+  'statement',
+  'settings',
+  'add',
+] as const;
 const captureViewports = [
   { name: 'xs', width: viewports.XS.width, height: viewports.XS.height },
   { name: 'm', width: viewports.M.width, height: viewports.M.height },

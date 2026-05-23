@@ -1,0 +1,259 @@
+/* Calendar agenda — mirrors docs/mocks/calendar-agenda.html.
+ * Filter pills + per-day stacks. Date column on the left, row stack on the
+ * right. At XS the date collapses on top of the rows. */
+
+:host {
+  display: block;
+}
+
+.cal-agenda {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-6);
+
+  &__filters {
+    display: flex;
+    gap: var(--s-2);
+    margin-bottom: var(--s-2);
+    flex-wrap: wrap;
+  }
+
+  &__pill {
+    appearance: none;
+    border: 1px solid var(--c-hairline-strong);
+    background: var(--c-surface);
+    color: var(--c-text);
+    font: 500 12px var(--font-sans);
+    padding: 6px 12px;
+    border-radius: var(--r-pill);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    &--on {
+      background: var(--c-elevated);
+      color: var(--c-text-strong);
+      border-color: var(--c-focus);
+    }
+  }
+
+  &__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+
+    &--loan { background: #6FA8C9; }
+    &--bill { background: #C9A66F; }
+    &--payment { background: #7FB07A; }
+  }
+
+  &__day {
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    gap: var(--s-4);
+    align-items: start;
+  }
+
+  &__head {
+    position: relative;
+    padding-top: 2px;
+    display: flex;
+    flex-direction: column;
+    align-self: start;
+  }
+
+  &__dow {
+    font: 600 11px var(--font-sans);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-muted);
+  }
+
+  &__dnum {
+    font: 700 28px var(--font-num);
+    color: var(--c-text-strong);
+    line-height: 1;
+    margin-top: 2px;
+  }
+
+  &__mon {
+    font: 500 12px var(--font-sans);
+    color: var(--c-muted);
+    margin-top: 2px;
+  }
+
+  &__badge {
+    margin-top: 6px;
+    align-self: flex-start;
+    font: 600 10px var(--font-sans);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: var(--r-pill);
+    background: var(--c-elevated);
+    color: var(--c-text-strong);
+
+    &--projected {
+      background: transparent;
+      border: 1px dashed color-mix(in srgb, #C9A66F 60%, transparent);
+      color: var(--c-muted);
+    }
+  }
+
+  &__day--today &__head::before {
+    content: "";
+    position: absolute;
+    left: -10px;
+    top: 16px;
+    width: 4px;
+    height: 28px;
+    background: var(--c-text-strong);
+    border-radius: var(--r-pill);
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  &__row {
+    appearance: none;
+    display: grid;
+    grid-template-columns: 8px 1fr auto;
+    gap: var(--s-3);
+    align-items: center;
+    padding: var(--s-3) var(--s-4);
+    border-radius: var(--r-md);
+    border: 1px solid var(--c-hairline);
+    background: var(--c-surface);
+    color: var(--c-text-strong);
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+    min-width: 0;
+    transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+
+    &:hover {
+      background: var(--c-elevated);
+      border-color: var(--c-hairline-strong);
+    }
+
+    &--projected {
+      border-style: dashed;
+      background: transparent;
+    }
+  }
+
+  &__row-stripe {
+    width: 4px;
+    height: 28px;
+    border-radius: var(--r-pill);
+    background: var(--c-muted);
+
+    .cal-agenda__row--loan & { background: #6FA8C9; }
+    .cal-agenda__row--bill & { background: #C9A66F; }
+    .cal-agenda__row--payment & { background: #7FB07A; }
+    .cal-agenda__row--projected & {
+      background: transparent;
+      border: 2px dashed #C9A66F;
+    }
+  }
+
+  &__row-main {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__row-title {
+    font: 600 14px var(--font-sans);
+    color: var(--c-text-strong);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    .cal-agenda__row--projected & { color: var(--c-text); }
+  }
+
+  &__row-meta {
+    font: 500 12px var(--font-sans);
+    color: var(--c-muted);
+    margin-top: 2px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__row-pill {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: var(--r-pill);
+    background: var(--c-elevated);
+    color: var(--c-text);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+
+    .cal-agenda__row--projected & {
+      background: transparent;
+      border: 1px dashed color-mix(in srgb, #C9A66F 60%, transparent);
+      color: var(--c-muted);
+    }
+  }
+
+  &__row-meta-trailing {
+    color: var(--c-muted);
+  }
+
+  &__row-amount {
+    font: 600 16px var(--font-num);
+    color: var(--c-text-strong);
+    white-space: nowrap;
+
+    .cal-agenda__row--payment & { color: var(--c-muted); }
+    .cal-agenda__row--projected & { color: var(--c-text); font-weight: 500; }
+  }
+}
+
+@media (max-width: 575px) {
+  /* XS: collapse the date column into an inline header above the rows so
+   * the layout matches docs/mocks/calendar-agenda.html @ XS where dates
+   * read as "FRI · MAY 3" rather than stacking DOW/day/month vertically. */
+  .cal-agenda__day {
+    grid-template-columns: 1fr;
+    gap: var(--s-2);
+  }
+  .cal-agenda__head {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .cal-agenda__dow,
+  .cal-agenda__mon {
+    font-size: 11px;
+    margin-top: 0;
+  }
+  .cal-agenda__dnum {
+    font: 600 11px var(--font-sans);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 0;
+    line-height: 1.5;
+  }
+  .cal-agenda__dow::after,
+  .cal-agenda__dnum::after {
+    content: "·";
+    margin-left: 6px;
+    color: var(--c-muted);
+  }
+  .cal-agenda__badge {
+    margin-top: 0;
+    margin-left: 2px;
+  }
+  .cal-agenda__day--today .cal-agenda__head::before {
+    display: none;
+  }
+}

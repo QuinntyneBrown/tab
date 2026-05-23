@@ -112,19 +112,42 @@ switch ($Target) {
             --startup-project (Join-Path $backendRoot 'src/Tab.Api/Tab.Api.csproj')
     }
     'e2e' {
-        $apiCsproj = Join-Path $backendRoot 'src/Tab.Api/Tab.Api.csproj'
-        $cliCsproj = Join-Path $backendRoot 'src/Tab.Cli/Tab.Cli.csproj'
+        $apiProjDir = Join-Path $backendRoot 'src/Tab.Api'
+        $cliProjDir = Join-Path $backendRoot 'src/Tab.Cli'
+        $apiCsproj = Join-Path $apiProjDir 'Tab.Api.csproj'
+        $cliCsproj = Join-Path $cliProjDir 'Tab.Cli.csproj'
         $apiUrl = 'http://localhost:5147'
         $ngUrl = 'http://localhost:4200'
 
-        Write-Host "> Applying migrations + seeding demo users" -ForegroundColor Cyan
-        Invoke-Dotnet run --no-launch-profile --project $cliCsproj -- db migrate
-        Invoke-Dotnet run --no-launch-profile --project $cliCsproj -- users seed
+        # Use the E2E environment everywhere — appsettings.E2E.json switches the
+        # DB provider to SQLite so the harness doesn't need LocalDB / SQL Server.
+        $env:ASPNETCORE_ENVIRONMENT = 'E2E'
+        $env:DOTNET_ENVIRONMENT = 'E2E'
+
+        # Point the CLI and the API at the same absolute SQLite file so seeding
+        # and serving don't end up on different relative-path databases.
+        $e2eDbPath = Join-Path $backendRoot 'tab-e2e.db'
+        $e2eConn = "Data Source=$e2eDbPath"
+        $env:ConnectionStrings__Tab = $e2eConn      # Picked up by Tab.Api (WebApplication.CreateBuilder).
+        $env:TAB_ConnectionStrings__Tab = $e2eConn  # Picked up by Tab.Cli (env-var prefix TAB_).
+
+        Write-Host "> Applying migrations + seeding demo users + ledger" -ForegroundColor Cyan
+        Push-Location $cliProjDir
+        try {
+            Invoke-Dotnet run --no-launch-profile --project $cliCsproj -- db migrate
+            Invoke-Dotnet run --no-launch-profile --project $cliCsproj -- users seed
+            # Seed the primary fixture user's ledger with the mock-faithful
+            # entries DemoDatabaseSeeder produces so visual.spec.ts can compare
+            # the live render against docs/mocks/*.html on the same data.
+            Invoke-Dotnet run --no-launch-profile --project $cliCsproj -- db seed --user quinntynebrown@gmail.com
+        } finally {
+            Pop-Location
+        }
 
         Write-Host "> Starting API at $apiUrl" -ForegroundColor Cyan
         $apiProcess = Start-Process -PassThru -FilePath 'dotnet' `
             -ArgumentList @('run','--no-launch-profile','--project', $apiCsproj, '--urls', $apiUrl) `
-            -WorkingDirectory $backendRoot
+            -WorkingDirectory $apiProjDir
 
         $ngProcess = $null
         try {
@@ -132,8 +155,12 @@ switch ($Target) {
             Wait-Endpoint "$apiUrl/swagger/v1/swagger.json" -TimeoutSeconds 180
 
             Write-Host "> Starting Angular dev server at $ngUrl" -ForegroundColor Cyan
-            $ngProcess = Start-Process -PassThru -FilePath 'npm' `
-                -ArgumentList @('start') `
+            # `Start-Process -FilePath 'npm'` doesn't resolve npm.cmd on Windows
+            # (Win32 process launch ignores PATHEXT). Spawn via cmd /c so the
+            # .cmd extension is found, and so taskkill /T can still walk the
+            # child tree when we stop the server.
+            $ngProcess = Start-Process -PassThru -FilePath 'cmd' `
+                -ArgumentList @('/c','npm','start') `
                 -WorkingDirectory $frontendRoot
 
             Wait-Endpoint $ngUrl -TimeoutSeconds 240

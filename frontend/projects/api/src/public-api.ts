@@ -50,6 +50,15 @@ export type { DashboardNudge } from './lib/dashboard/dashboard-nudge.interface';
 export type { DashboardPayload } from './lib/dashboard/dashboard-payload.interface';
 export type { MonthlySummary } from './lib/dashboard/monthly-summary.interface';
 
+// Calendar
+export { CALENDAR_SERVICE } from './lib/calendar/calendar-service.token';
+export { provideCalendarService } from './lib/calendar/provide-calendar-service';
+export type { ICalendarService } from './lib/calendar/calendar-service.interface';
+export type { CalendarEntry } from './lib/calendar/calendar-entry.interface';
+export type { CalendarEntryType } from './lib/calendar/calendar-entry-type.type';
+export type { CalendarPayload } from './lib/calendar/calendar-payload.interface';
+export type { CalendarProjection } from './lib/calendar/calendar-projection.interface';
+
 // Ledger / loans
 export { LOANS_SERVICE } from './lib/ledger/loans-service.token';
 export { provideLoansService } from './lib/ledger/provide-loans-service';

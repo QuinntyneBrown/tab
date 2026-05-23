@@ -1,8 +1,10 @@
 <div class="amount-input">
-  <div class="amount-input__label">{{ label }}</div>
+  <div class="amount-input__label" data-testid="amount-label">{{ label }}</div>
   <input
+    #input
     class="amount-input__control"
     [attr.inputmode]="inputmode"
+    [attr.aria-label]="label"
     [placeholder]="placeholder"
     [value]="value"
     (input)="onInput($event)" />

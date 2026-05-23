@@ -11,6 +11,7 @@ test.describe('L2-021 — Edit preferences', () => {
     dashboardPage,
   }) => {
     await settingsPage.goto();
+    await settingsPage.openCurrencyEditor();
     await settingsPage.currencySelect.selectOption('USD');
     await settingsPage.preferencesSave.click();
 
@@ -27,6 +28,7 @@ test.describe('L2-021 — Edit preferences', () => {
     billsPage,
   }) => {
     await settingsPage.goto();
+    await settingsPage.openDefaultSplitEditor();
     await settingsPage.defaultSplitInput.fill('60');
     await settingsPage.preferencesSave.click();
 
@@ -41,6 +43,7 @@ test.describe('L2-021 — Edit preferences', () => {
     dashboardPage,
   }) => {
     await settingsPage.goto();
+    await settingsPage.openReminderLeadEditor();
     await settingsPage.reminderLeadInput.fill('7');
     await settingsPage.preferencesSave.click();
 
